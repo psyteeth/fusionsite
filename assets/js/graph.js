@@ -159,7 +159,7 @@
       else d2.appendChild(el('span', 'in' + ((def.inner || '').length <= 2 ? ' in--big' : ''), def.inner || ''));
       if (def.dotSvg) d2.appendChild(el('span', 'dot-ico', def.dotSvg));
       root.appendChild(d2);
-      root.appendChild(el('span', 'lab', def.label));
+      root.appendChild(el('span', 'lab' + (/\s/.test(def.label) ? '' : ' lab--one'), def.label));   // одно слово — без переносов
       if (def.detail) root.addEventListener('click', function () { openDetail(def.detail); });
     }
     root.dataset.id = def.id;

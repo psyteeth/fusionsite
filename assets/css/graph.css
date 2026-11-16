@@ -215,3 +215,6 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
   .node--hub[data-id="efiry"].m-full .v-full .h{font-size:21px}
   .node--hub[data-id="efiry"].m-full .hub-foot{margin-top:7px}
 }
+
+/* Подпись из одного слова (например «Очковтирательство») — целиком, без переноса */
+.node--leaf .lab.lab--one{max-width:none;hyphens:manual;-webkit-hyphens:manual;white-space:nowrap}
