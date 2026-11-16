@@ -279,7 +279,7 @@
     var cx2, cy2, rx, ry, leafR, Rc, stageH = H;
     if (mobile) {
       leafR = n > 6 ? 30 : 40;
-      var top = 150;                       // ниже молекулы и подписи «на главную»
+      var top = 158;                      // ниже молекулы и подписи «на главную»
       ry = Math.max(200, n * 31, (H - top - 2 * leafR - 70) / 2);
       rx = W / 2 - 62;
       cx2 = W / 2; cy2 = top + leafR + ry;
@@ -295,9 +295,9 @@
 
     // молекула: на компьютере — в разрыве кольца листьев со стороны своего угла (ближе к центру, заметно);
     // на телефоне — сверху, над кольцом
-    var tr = mobile ? 30 : 44, sr = mobile ? 14 : 18, sd = mobile ? 60 : 92;
+    var tr = mobile ? 30 : 44, sr = mobile ? 14 : 18, sd = mobile ? 68 : 92;
     var mx, my, molA = Math.atan2(c[1], c[0]);
-    if (mobile) { mx = c[0] < 0 ? 80 : W - 80; my = 82; }
+    if (mobile) { mx = c[0] < 0 ? 90 : W - 90; my = 88; }
     else { mx = cx2 + Math.cos(molA) * rx; my = cy2 + Math.sin(molA) * ry; }
     // подпись «на главную»: там, где нет сателлитов (на компьютере в верхних углах — над зубиком)
     set('psy', mx, my, tr, 1, 'mini', !mobile && c[1] < 0 ? 't' : '');
