@@ -47,9 +47,8 @@
   var LEAVES = [
     { id: 'diag',   parent: 'uslugi', label: 'Бесплатная диагностика', inner: '0 ₽', detail: 'd-diag', sun: true, dotSvg: ICON_TOOTH },   // на главной в жёлтом кружке — нарисованный зубик
     { id: 'cons',   parent: 'uslugi', label: 'Первичная консультация', inner: '2 500 ₽', detail: 'd-cons' },
-    { id: 'vip',    parent: 'uslugi', label: 'VIP-консультация', inner: '30 000 ₽', detail: 'd-vip' },
     { id: 'group',  parent: 'uslugi', label: 'Групповая работа', inner: '15 000 ₽<br>/ мес', detail: 'd-group' },
-    { id: 'clinic', parent: 'uslugi', label: 'Сотрудничество с клиниками и стоматологами', inner: '🦷', detail: 'd-clinic' },
+    { id: 'clinic', parent: 'uslugi', label: 'Стоматологам', inner: '🦷', detail: 'd-clinic' },
     { id: 'kungfu', parent: 'group', sub: true, at: [[9, 11], [1, 3]], label: 'Зубное кунг-фу', inner: '', detail: 'd-kungfu' },
 
     { id: 'a1', parent: 'blog', label: 'Как с зубами, так и с людьми', detail: 'd-a1', img: '63343139-pexels-karolina-grab.jpg' },
@@ -384,6 +383,12 @@
       if (mobile) stageH = Math.max(stageH, y + leafR + lh + 70);
       else if (y + leafR + 4 + lh > H - 62) y = H - 62 - lh - leafR - 4;   // над плашкой psyteeth.ru внизу
       set(k.id, x, y, leafR, 1, 'ring', 'b');
+      // подпись маленького кружка — со стороны, противоположной «родителю», чтобы не налезать на него
+      function subLab(sx, sy) {
+        if (sy < y - leafR * 0.4) return 't';
+        if (sy > y + leafR * 0.4) return 'b';
+        return sx < x ? (sx > 120 ? 'l' : 't') : (sx < W - 120 ? 'r' : 't');
+      }
       childrenOf(k.id).forEach(function (s) {
         var sr = leafR * 0.5;   // сателлит сателлита — не больше половины своего «родителя»
         // ставим с внешней стороны от «родителя» (дальше от центрального круга)
@@ -403,7 +408,7 @@
               sx = tx; sy = ty; found = true;
             }
           });
-          if (found) { set(s.id, sx, sy, sr, 1, 'ring', 'b'); return; }
+          if (found) { set(s.id, sx, sy, sr, 1, 'ring', subLab(sx, sy)); return; }
         }
         if (sx < lim || sx > W - lim) {   // упёрлись в край экрана — ставим над «родителем»
           sx = Math.max(lim, Math.min(W - lim, x));
@@ -415,7 +420,7 @@
           if (sx < lim || sx > W - lim) sx = x - side * (leafR + sr + (mobile ? 30 : 46));
           sy = y - leafR * 0.3;
         }
-        set(s.id, sx, sy, sr, 1, 'ring', 'b');
+        set(s.id, sx, sy, sr, 1, 'ring', subLab(sx, sy));
       });
     });
     return stageH;
