@@ -25,8 +25,8 @@
       desc: 'с 2020 меняем представление о работе с зубами<br><br>работаем с зубами через отношения, а с отношениями - через зубы',
       draft: true, tap: true },
     { id: 'uslugi', hash: 'uslugi', title: 'Услуги', mini: '$',
-      desc: 'Просто начни с бесплатной диагностики',
-      btn: { text: 'Записаться', href: 'https://t.me/psyteeth' } },   // запись — через администратора Марию
+      desc: 'Если тебя что-то беспокоит с зубами, деснами, прикусом, кривизной, просто приходи на бесплатную диагностику',
+      btn: { text: 'Записаться', detail: 'd-diag' } },   // кнопка открывает окно бесплатной диагностики (запись там — через Марию)
     { id: 'blog', hash: 'blog', title: 'Блог', mini: 'Б', svg: ICON_DOC,
       desc: '11 статей на темы от нейрофизиологии отношений до третьей сепарации, а в общем — о том, как зубы отзываются на то, что происходит между людьми' },
     { id: 'efiry', hash: 'efiry', title: 'Эфиры', mini: 'Э', svg: ICON_PLAY,
@@ -121,9 +121,15 @@
       full.appendChild(el('div', 'h', def.title));
       if (def.desc) full.appendChild(el('div', 'd' + (def.draft ? ' draft' : ''), def.desc));
       if (def.btn) {
-        var b = el('a', 'cta', def.btn.text);
-        b.href = def.btn.href; b.target = '_blank'; b.rel = 'noopener';
-        b.addEventListener('click', function (ev) { ev.stopPropagation(); });
+        var b;
+        if (def.btn.detail) {   // кнопка открывает окно с описанием
+          b = el('button', 'cta', def.btn.text); b.type = 'button';
+          b.addEventListener('click', function (ev) { ev.stopPropagation(); openDetail(def.btn.detail); });
+        } else {
+          b = el('a', 'cta', def.btn.text);
+          b.href = def.btn.href; b.target = '_blank'; b.rel = 'noopener';
+          b.addEventListener('click', function (ev) { ev.stopPropagation(); });
+        }
         full.appendChild(b);
       }
       if (def.foot) {
