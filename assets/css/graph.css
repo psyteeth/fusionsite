@@ -191,5 +191,12 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
 .hub-foot__i svg{display:block;width:100%;height:100%}
 .hub-foot:hover{color:var(--accent)}
 .hub-foot:hover .hub-foot__i{transform:scale(1.08)}
-/* На телефоне в круге только самолётик, подпись к нему не влезает */
-@media (max-width:699px){ .hub-foot .hub-foot__t{display:none} }
+
+/* Эфиры на телефоне: весь текст и ссылка помещаются в круг */
+@media (max-width:699px){
+  .node--hub[data-id="efiry"].m-full .v-full{padding:0 10px;gap:3px}
+  .node--hub[data-id="efiry"].m-full .v-full .h{font-size:17px}
+  .node--hub[data-id="efiry"].m-full .v-full .d{font-size:10.5px;line-height:1.25}
+  .node--hub[data-id="efiry"].m-full .hub-foot{font-size:9.5px;line-height:1.2;gap:3px;margin-top:2px}
+  .node--hub[data-id="efiry"].m-full .hub-foot__i{width:24px;height:24px}
+}
