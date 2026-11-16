@@ -113,6 +113,7 @@
       else mini.textContent = def.mini;
       disc.appendChild(mini);
       root.appendChild(disc);
+      if (def.id === 'psy') root.appendChild(el('span', 'home-cap', 'на главную'));
       root.addEventListener('click', function () { go(def.id); });
       root.addEventListener('keydown', function (ev) {
         if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); go(def.id); }
@@ -255,7 +256,7 @@
   }
 
   // n точек на эллипсе с равным шагом по длине дуги, начиная с полушага от угла a0
-  function evenOnEllipse(rx, ry, n, a0) {
+  function evenOnEllipse(rx, ry, n, a0, gap) {
     var N = 720, cum = [0], px = rx * Math.cos(a0), py = ry * Math.sin(a0), i;
     for (i = 1; i <= N; i++) {
       var t = a0 + 2 * Math.PI * i / N, x = rx * Math.cos(t), y = ry * Math.sin(t);
@@ -263,7 +264,8 @@
     }
     var total = cum[N], out = [], j = 0;
     for (i = 0; i < n; i++) {
-      var target = total * (i + 0.5) / n;
+      var g = gap ? Math.min(gap / total, 0.4) : 0;   // разрыв (в px дуги) вокруг a0 — место под молекулу
+      var target = total * (g / 2 + (1 - g) * (i + 0.5) / n);
       while (cum[j] < target) j++;
       out.push(a0 + 2 * Math.PI * j / N);
     }
@@ -273,34 +275,11 @@
   function layoutSection(id) {
     var c = CORNER[id];
     var m = Math.min(W, H);
-    var pad = mobile ? 46 : 92;
-    // молекула в углу
-    var mx, my;
-    if (mobile) { mx = c[0] < 0 ? pad : W - pad; my = 58; }
-    else { mx = c[0] < 0 ? pad : W - pad; my = c[1] < 0 ? pad + 10 : H - pad; }
-    var tr = mobile ? 22 : 30, sr = mobile ? 13 : 17, sd = mobile ? 34 : 50;
-    set('psy', mx, my, tr, 1, 'mini');
-    var others = ['uslugi', 'blog', 'efiry', 'vopros'].filter(function (h) { return h !== id; });
-    // сателлиты молекулы — веером в сторону от угла
-    var away = Math.atan2(-c[1], -c[0]);
-    if (mobile) away = Math.atan2(1, -c[0]);
-    others.forEach(function (h, i) {
-      var a = away + Math.PI - 1.15 + i * 1.15;
-      set(h, mx + Math.cos(a) * sd, my + Math.sin(a) * sd, sr, 1, 'mini');
-      LEAVES.forEach(function (l) {
-        if (topHub(l) === h) set(l.id, mx + Math.cos(a) * sd, my + Math.sin(a) * sd, 0, 0, 'dot');
-      });
-    });
-
-    var kids = childrenOf(id);
-    var subs = subsOf(id);
-
-    // раздел в центре, его сателлиты — лучами вокруг (как на эскизах), каждый связан с центром
-    var n = kids.length;
+    var n = childrenOf(id).length;
     var cx2, cy2, rx, ry, leafR, Rc, stageH = H;
     if (mobile) {
       leafR = n > 6 ? 30 : 40;
-      var top = 104;                       // ниже молекулы
+      var top = 132;                       // ниже молекулы и подписи «на главную»
       ry = Math.max(200, n * 31, (H - top - 2 * leafR - 70) / 2);
       rx = W / 2 - 62;
       cx2 = W / 2; cy2 = top + leafR + ry;
@@ -313,10 +292,34 @@
       leafR = Math.max(30, Math.min(56, (2 * Math.PI * ry / n) * 0.3));
       Rc = Math.min(m * 0.21, ry - leafR - 24);
     }
+
+    // молекула: на компьютере — в разрыве кольца листьев со стороны своего угла (ближе к центру, заметно);
+    // на телефоне — сверху, над кольцом
+    var tr = mobile ? 30 : 44, sr = mobile ? 14 : 18, sd = mobile ? 46 : 66;
+    var mx, my, molA = Math.atan2(c[1], c[0]);
+    if (mobile) { mx = c[0] < 0 ? 62 : W - 62; my = 74; }
+    else { mx = cx2 + Math.cos(molA) * rx; my = cy2 + Math.sin(molA) * ry; }
+    set('psy', mx, my, tr, 1, 'mini', !mobile && c[1] > 0 ? 't' : '');   // подпись над зубиком в нижних углах
+    var others = ['uslugi', 'blog', 'efiry', 'vopros'].filter(function (h) { return h !== id; });
+    // сателлиты молекулы — веером наружу, от центра
+    var away = Math.atan2(my - cy2, mx - cx2);
+    if (mobile) away = Math.atan2(-1, -c[0] * 1.2);   // на телефоне — вверх и к середине, подпись снизу свободна
+    others.forEach(function (h, i) {
+      var step = mobile ? 0.95 : 1.05, a = away - step + i * step;
+      set(h, mx + Math.cos(a) * sd, my + Math.sin(a) * sd, sr, 1, 'mini');
+      LEAVES.forEach(function (l) {
+        if (topHub(l) === h) set(l.id, mx + Math.cos(a) * sd, my + Math.sin(a) * sd, 0, 0, 'dot');
+      });
+    });
+
+    var kids = childrenOf(id);
+    var subs = subsOf(id);
+
+    // раздел в центре, его сателлиты — лучами вокруг (как на эскизах), каждый связан с центром
     set(id, cx2, cy2, Rc, 1, 'full');
     // не ставить листья на линию к молекуле
     var toMol = Math.atan2(my - cy2, mx - cx2);
-    var angles = evenOnEllipse(rx, ry, n, toMol);
+    var angles = evenOnEllipse(rx, ry, n, mobile ? toMol : molA, mobile ? 0 : 2 * (tr + sd + sr) + 2 * leafR);
     kids.forEach(function (k, i) {
       var a = angles[i];
       var x = cx2 + Math.cos(a) * rx, y = cy2 + Math.sin(a) * ry;
