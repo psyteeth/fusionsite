@@ -7,6 +7,11 @@
   // подсказка «нажми» в центральном круге на главной
   // палец с «кликом» (рисунок по мотивам Tabler Icons «hand-click», MIT)
   var ICON_TAP = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><g class="hand"><path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5"/><path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47"/></g><g class="rays"><path d="M5 3l-1 -1"/><path d="M4 7h-1"/><path d="M14 3l1 -1"/><path d="M15 6h1"/></g></svg>';
+  // иконки-аватарки для «Задать вопрос»
+  var AV_TG = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#29a9eb"/><path d="M5.4 11.7l11.4-4.4c.53-.2 1 .13.83.93l-1.94 9.13c-.14.65-.53.8-1.07.5l-2.96-2.18-1.43 1.38c-.16.16-.29.29-.6.29l.21-3.02 5.5-4.97c.24-.21-.05-.33-.37-.12l-6.8 4.28-2.93-.92c-.64-.2-.65-.64.13-.94z" fill="#fff"/></svg>';
+  var AV_BOT = '<svg viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="2.6" x2="12" y2="6" stroke="#1b1b1b" stroke-width="1.3"/><circle cx="12" cy="2.6" r="1.4" fill="#ff5136"/><rect x="4.5" y="6" width="15" height="12" rx="3.5" fill="#cfd8dc" stroke="#1b1b1b" stroke-width="1.2"/><rect x="2.6" y="10" width="1.9" height="4.4" rx=".9" fill="#1b1b1b"/><rect x="19.5" y="10" width="1.9" height="4.4" rx=".9" fill="#1b1b1b"/><circle cx="9.2" cy="11.3" r="1.7" fill="#00a1c9"/><circle cx="14.8" cy="11.3" r="1.7" fill="#00a1c9"/><path d="M9 15h6" stroke="#1b1b1b" stroke-width="1.2" stroke-linecap="round"/><rect x="8" y="18.6" width="8" height="2.6" rx="1" fill="#cfd8dc" stroke="#1b1b1b" stroke-width="1"/></svg>';
+  var AV_ANTON = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8.4" fill="#f7d4b4"/><path d="M3.8 11.6C3.6 6.4 7.4 3.2 12.2 3.2c4.6 0 8.2 3 8 8.2-1.3-1.9-3.4-3.2-6.5-3.4-.9 1-2.6 1.7-4.6 1.8-2.2.1-4 .7-5.3 1.8z" fill="#ecc45c" stroke="#c9a03a" stroke-width=".5"/><circle cx="9" cy="13" r="1" fill="#1b1b1b"/><circle cx="15" cy="13" r="1" fill="#1b1b1b"/><path d="M8.7 16.1c1.8 1.9 4.8 1.9 6.6 0" fill="none" stroke="#1b1b1b" stroke-width="1.2" stroke-linecap="round"/></svg>';
+  var AV_MARIA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 12.4C3.4 6.7 7.2 3 12 3s8.6 3.7 8.4 9.4l-.2 6.4c-.1.9-.8 1.5-1.7 1.5H5.5c-.9 0-1.6-.6-1.7-1.5z" fill="#f0cf72" stroke="#c9a03a" stroke-width=".5"/><ellipse cx="12" cy="13.4" rx="6.3" ry="6.8" fill="#f9dcc2"/><path d="M5.6 11.6c.4-3.4 3-5.6 6.4-5.6s6 2.2 6.4 5.6c-2.6-.2-5.2-1.2-6.9-3-1.4 1.6-3.4 2.7-5.9 3z" fill="#f0cf72"/><circle cx="9.5" cy="13.6" r=".95" fill="#1b1b1b"/><circle cx="14.5" cy="13.6" r=".95" fill="#1b1b1b"/><path d="M9.6 16.5c1.4 1.3 3.4 1.3 4.8 0" fill="none" stroke="#d2455a" stroke-width="1.2" stroke-linecap="round"/></svg>';
   // иконки для свёрнутых разделов (молекула)
   var ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
   var ICON_DOC = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg>';
@@ -54,10 +59,10 @@
     { id: 'a10', parent: 'blog', label: 'Инструкция по эксплуатации "БЕЗЗУБЫХ".', href: './tpost/havefun/', img: '65333466-leary_circumplex_lig.png' },
     { id: 'a11', parent: 'blog', label: 'Закрой свой рот! Ты слишком ...', href: './tpost/shutup/', img: '63646561-21____.jpg' },
 
-    { id: 'admin', parent: 'vopros', label: 'Администратору', inner: '✉️', href: 'https://t.me/psyteeth' },
-    { id: 'anton', parent: 'vopros', label: 'Антону Казакову, создателю', inner: 'АК', href: 'https://t.me/happinessguy' },
-    { id: 'bot',   parent: 'vopros', label: 'Драма Киллер Боту — про отношения и зубы', inner: '🤖', href: 'https://t.me/dramakiller_bot' },
-    { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', inner: '💬', href: 'https://t.me/psy_teeth' }
+    { id: 'admin', parent: 'vopros', label: 'Администратору', svg: AV_MARIA, href: 'https://t.me/psyteeth' },
+    { id: 'anton', parent: 'vopros', label: 'Антону Казакову, создателю', svg: AV_ANTON, href: 'https://t.me/happinessguy' },
+    { id: 'bot',   parent: 'vopros', label: 'Драма Киллер Боту — про отношения и зубы', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
+    { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, href: 'https://t.me/psy_teeth' }
   ];
   for (var e = 1; e <= 9; e++) {
     LEAVES.push({ id: 'e' + e, parent: 'efiry', label: 'Эфир ' + e, inner: '▶', detail: 'd-efir', placeholder: true });
@@ -123,6 +128,7 @@
       root.title = def.label;
       var d2 = el('span', 'disc');
       if (def.img) d2.style.backgroundImage = "url('" + IMG + def.img + "')";
+      else if (def.svg) d2.appendChild(el('span', 'ico', def.svg));
       else d2.appendChild(el('span', 'in' + ((def.inner || '').length <= 2 ? ' in--big' : ''), def.inner || ''));
       root.appendChild(d2);
       root.appendChild(el('span', 'lab', def.label));
@@ -215,8 +221,9 @@
       var toCenter = Math.atan2(cy - hy, cx - hx);
       var big = id === 'uslugi' || id === 'vopros';
       var labelled = !mobile && big;
-      var lr = mobile ? (big ? 5.5 : 4.5) : (big ? 14 : 7);
-      var dist = hubR + (mobile ? (big ? 16 : 12) : (big ? 40 : 26));
+      var ask = id === 'vopros';   // у «Задать вопрос» сателлиты крупнее, с иконками внутри
+      var lr = mobile ? (ask ? 10 : big ? 5.5 : 4.5) : (ask ? 20 : big ? 14 : 7);
+      var dist = hubR + (mobile ? (ask ? 20 : big ? 16 : 12) : (ask ? 46 : big ? 40 : 26));
       kids.forEach(function (k, i) {
         var a = toCenter + Math.PI * 2 * (i + 0.5) / kids.length;
         var x = hx + Math.cos(a) * dist, y = hy + Math.sin(a) * dist;
