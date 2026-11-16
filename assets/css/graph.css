@@ -171,7 +171,7 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
 }
 
 /* эмодзи внутри сателлита (Администратору) — крупно, системный шрифт эмодзи */
-.node--leaf .emo{font-size:calc(var(--r) * 1.15px);line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.node--leaf .emo{font-size:calc(var(--r) * .98px);line-height:1;transform:translateY(-7%);font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 /* картинка, видимая только в маленьком виде на главной (зубик в жёлтом кружке диагностики) */
 .node--leaf .dot-ico{display:none}
 .node--leaf.m-dot .dot-ico{display:block;width:80%;height:80%}
