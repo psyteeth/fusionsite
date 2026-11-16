@@ -62,7 +62,7 @@ a{color:inherit}
 .node--leaf.m-dot .in{display:none}
 .node--leaf.m-dot .disc{background-image:none !important;background:var(--disc)}
 .node--leaf.has-img .disc{border-width:2px}
-.node--leaf.is-ph .disc{border-style:dashed;color:var(--muted)}
+.node--leaf.is-ph .disc{color:var(--muted)}
 .node--leaf.is-sun .disc{background:#fff3c4;border-color:#d9a400;
   box-shadow:0 0 0 calc(var(--r) * .12px) rgba(255,200,0,.25),0 0 0 calc(var(--r) * .26px) rgba(255,200,0,.12)}
 .node--leaf.is-sun.m-dot .disc{background:#ffe27a}
@@ -143,3 +143,6 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
 @keyframes tap-press{0%,55%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(-.6px,-.6px) scale(.9)}}
 @keyframes tap-rays{0%,15%{opacity:.25}28%{opacity:1}55%,100%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){ .tap .hand,.tap .rays{animation:none !important;opacity:1} }
+
+/* Главная: цветные точки статей Блога */
+.node--leaf.m-dot[style*="--dot"] .disc{background:var(--dot)}

@@ -129,6 +129,7 @@
       if (def.detail) root.addEventListener('click', function () { openDetail(def.detail); });
     }
     root.dataset.id = def.id;
+    if (def.dot) root.style.setProperty('--dot', def.dot);
     n.el = root;
     n.disc = root.querySelector('.disc');
     host.appendChild(root);
@@ -136,6 +137,11 @@
     order.push(n);
     return n;
   }
+
+  // цвета маленьких сателлитов Блога на главной (у каждой статьи свой)
+  var BLOG_DOTS = ['#ff5136', '#00a1c9', '#ffc94d', '#6cc070', '#a77bf3', '#ff8fb1', '#38c6b4', '#f39a3d', '#5b7cfa', '#e25d5d', '#9fd04a'];
+  var bi = 0;
+  LEAVES.forEach(function (l) { if (l.parent === 'blog') l.dot = BLOG_DOTS[bi++ % BLOG_DOTS.length]; });
 
   HUBS.forEach(function (h) { addNode(h, 'hub'); });
   LEAVES.forEach(function (l) { addNode(l, 'leaf'); });
@@ -209,13 +215,13 @@
       var toCenter = Math.atan2(cy - hy, cx - hx);
       var big = id === 'uslugi' || id === 'vopros';
       var labelled = !mobile && big;
-      var lr = mobile ? (big ? 5.5 : 3.5) : (big ? 14 : 7);
+      var lr = mobile ? (big ? 5.5 : 4.5) : (big ? 14 : 7);
       var dist = hubR + (mobile ? (big ? 16 : 12) : (big ? 40 : 26));
       kids.forEach(function (k, i) {
         var a = toCenter + Math.PI * 2 * (i + 0.5) / kids.length;
         var x = hx + Math.cos(a) * dist, y = hy + Math.sin(a) * dist;
         var side = Math.cos(a) < 0 ? 'l' : 'r';
-        set(k.id, x, y, lr, 1, 'dot', labelled ? side : '');
+        set(k.id, x, y, k.sun ? lr * 1.5 : lr, 1, 'dot', labelled ? side : '');   // бесплатная диагностика — крупнее
         childrenOf(k.id).forEach(function (s) {
           var off = lr + (labelled ? 26 : 10);
           set(s.id, x + Math.cos(a) * off, y + Math.sin(a) * off, lr * 0.6, 1, 'dot', labelled ? side : '');
