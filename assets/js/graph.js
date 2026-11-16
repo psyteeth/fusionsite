@@ -4,6 +4,10 @@
 
   var IMG = './assets/img/';
   var TOOTH = IMG + '66623166-icons8-tooth-100.png';
+  // зубик-контур (Tabler Icons «dental», MIT): белый с тёмной обводкой, чтобы читался на жёлтом
+  var ICON_TOOTH = '<svg viewBox="0 0 24 24" fill="#fff" stroke="#1b1b1b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M12 5.5c-1.074 -.586 -2.583 -1.5 -4 -1.5c-2.1 0 -4 1.247 -4 5c0 4.899 1.056 8.41 2.671 10.537c.573 .756 1.97 .521 2.567 -.236c.398 -.505 .819 -1.439 1.262 -2.801c.292 -.771 .892 -1.504 1.5 -1.5c.602 0 1.21 .737 1.5 1.5c.443 1.362 .864 2.295 1.262 2.8c.597 .759 2 .993 2.567 .237c1.615 -2.127 2.671 -5.637 2.671 -10.537c0 -3.74 -1.908 -5 -4 -5c-1.423 0 -2.92 .911 -4 1.5z"/>' +
+    '<path d="M12 5.5l3 1.5" fill="none"/></svg>';
   // подсказка «нажми» в центральном круге на главной
   // палец с «кликом» (рисунок по мотивам Tabler Icons «hand-click», MIT)
   var ICON_TAP = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><g class="hand"><path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5"/><path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47"/></g><g class="rays"><path d="M5 3l-1 -1"/><path d="M4 7h-1"/><path d="M14 3l1 -1"/><path d="M15 6h1"/></g></svg>';
@@ -38,7 +42,7 @@
   var HOME_POS = { uslugi: [-1, -1], blog: [1, -1], efiry: [1, 1], vopros: [-1, 1] };
 
   var LEAVES = [
-    { id: 'diag',   parent: 'uslugi', label: 'Бесплатная диагностика', inner: '0 ₽', detail: 'd-diag', sun: true, dotIcon: TOOTH },   // на главной в жёлтом кружке — зубик
+    { id: 'diag',   parent: 'uslugi', label: 'Бесплатная диагностика', inner: '0 ₽', detail: 'd-diag', sun: true, dotSvg: ICON_TOOTH },   // на главной в жёлтом кружке — нарисованный зубик
     { id: 'cons',   parent: 'uslugi', label: 'Первичная консультация', inner: '2 500 ₽', detail: 'd-cons' },
     { id: 'vip',    parent: 'uslugi', label: 'VIP-консультация', inner: '30 000 ₽', detail: 'd-vip' },
     { id: 'group',  parent: 'uslugi', label: 'Групповая работа', inner: '15 000 ₽<br>/ мес', detail: 'd-group' },
@@ -131,7 +135,7 @@
       else if (def.ava) { var av = el('img', 'ava'); av.src = IMG + def.ava; av.alt = ''; d2.appendChild(av); }
       else if (def.svg) d2.appendChild(el('span', 'ico', def.svg));
       else d2.appendChild(el('span', 'in' + ((def.inner || '').length <= 2 ? ' in--big' : ''), def.inner || ''));
-      if (def.dotIcon) { var di = el('img', 'dot-ico'); di.src = def.dotIcon; di.alt = ''; d2.appendChild(di); }
+      if (def.dotSvg) d2.appendChild(el('span', 'dot-ico', def.dotSvg));
       root.appendChild(d2);
       root.appendChild(el('span', 'lab', def.label));
       if (def.detail) root.addEventListener('click', function () { openDetail(def.detail); });
@@ -227,8 +231,8 @@
       var ask = id === 'vopros';   // у «Задать вопрос» сателлиты крупнее, с иконками внутри
       var lr = mobile ? (ask ? 10 : big ? 5.5 : 4.5) : (ask ? 20 : big ? 14 : 7);
       var dist = hubR + (mobile ? (ask ? 20 : big ? 16 : 12) : (ask ? 46 : big ? 40 : 26));
-      // у «Задать вопрос» на компьютере крест повёрнут на ~27° против часовой (чуть сильнее, чем на телефоне)
-      var base = ask && !mobile ? -1.25 : toCenter;
+      // у «Задать вопрос» на компьютере крест повёрнут на ~19° против часовой (почти как на телефоне)
+      var base = ask && !mobile ? -1.12 : toCenter;
       kids.forEach(function (k, i) {
         var a = base + Math.PI * 2 * (i + 0.5) / kids.length;
         var x = hx + Math.cos(a) * dist, y = hy + Math.sin(a) * dist;
