@@ -225,8 +225,8 @@
       var ask = id === 'vopros';   // у «Задать вопрос» сателлиты крупнее, с иконками внутри
       var lr = mobile ? (ask ? 10 : big ? 5.5 : 4.5) : (ask ? 20 : big ? 14 : 7);
       var dist = hubR + (mobile ? (ask ? 20 : big ? 16 : 12) : (ask ? 46 : big ? 40 : 26));
-      // у «Задать вопрос» на компьютере крест повёрнут так же, как на телефоне (~62° от горизонтали)
-      var base = ask && !mobile ? -1.085 : toCenter;
+      // у «Задать вопрос» на компьютере крест повёрнут на ~27° против часовой (чуть сильнее, чем на телефоне)
+      var base = ask && !mobile ? -1.25 : toCenter;
       kids.forEach(function (k, i) {
         var a = base + Math.PI * 2 * (i + 0.5) / kids.length;
         var x = hx + Math.cos(a) * dist, y = hy + Math.sin(a) * dist;
