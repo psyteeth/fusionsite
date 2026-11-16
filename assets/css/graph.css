@@ -178,3 +178,8 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
 .node--leaf .dot-ico svg{display:block;width:100%;height:100%}
 /* фон эмодзи «Администратору» — бирюзово-голубой, как был у аватарки с зубом */
 .node--leaf[data-id="admin"] .disc{background:linear-gradient(135deg,#5afcef 0%,#62e6f8 45%,#80bcfb 100%) !important}
+
+/* Модалка эфира: дата и кнопка на пост в Телеграме */
+.modal .meta{color:var(--muted);font-size:14px;margin-top:-8px}
+.modal .btn-tg{display:inline-block;margin-top:6px;padding:11px 22px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font-weight:700}
+.modal .btn-tg:hover{filter:brightness(1.08)}

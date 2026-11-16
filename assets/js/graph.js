@@ -66,8 +66,15 @@
     { id: 'bot',   parent: 'vopros', label: 'Драма Киллер Боту — про отношения и зубы', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
     { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, href: 'https://t.me/psy_teeth' }
   ];
+  // Эфиры: от свежего к старому. Обложка — превью видео из поста (assets/img/efir-<номер поста>.jpg),
+  // текст в модалке — блок #d-e<N> в index.html (саммари + ссылка на пост). Пустые места — заглушки.
+  var EFIRS = [
+    { title: 'Чем дышат клиенты Психостоматологии №1', img: 'efir-780.jpg' }
+  ];
   for (var e = 1; e <= 9; e++) {
-    LEAVES.push({ id: 'e' + e, parent: 'efiry', label: 'Эфир ' + e, inner: '▶', detail: 'd-efir', placeholder: true });
+    var ef = EFIRS[e - 1];
+    if (ef) LEAVES.push({ id: 'e' + e, parent: 'efiry', label: ef.title, img: ef.img, detail: 'd-e' + e });
+    else LEAVES.push({ id: 'e' + e, parent: 'efiry', label: 'Эфир ' + e, inner: '▶', detail: 'd-efir', placeholder: true });
   }
 
   // ---------- DOM ----------
