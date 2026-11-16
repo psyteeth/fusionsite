@@ -235,10 +235,10 @@
       var base = ask && !mobile ? -1.12 : toCenter;
       kids.forEach(function (k, i) {
         var a = base + Math.PI * 2 * (i + 0.5) / kids.length;
-        var kd = k.sun ? dist + lr * 0.6 : dist;
+        var kd = k.sun ? dist + lr * (mobile ? 0.6 : 0.35) : dist;
         var x = hx + Math.cos(a) * kd, y = hy + Math.sin(a) * kd;
         var side = Math.cos(a) < 0 ? 'l' : 'r';
-        set(k.id, x, y, k.sun ? lr * 2.1 : lr, 1, 'dot', labelled ? side : '');   // бесплатная диагностика (зубик) — заметно крупнее
+        set(k.id, x, y, k.sun ? lr * (mobile ? 2.1 : 1.7) : lr, 1, 'dot', labelled ? side : '');   // бесплатная диагностика (зубик) — заметно крупнее
         childrenOf(k.id).forEach(function (s) {
           var off = lr + (labelled ? 26 : 10);
           set(s.id, x + Math.cos(a) * off, y + Math.sin(a) * off, lr * 0.6, 1, 'dot', labelled ? side : '');
