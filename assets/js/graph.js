@@ -67,7 +67,8 @@
     { id: 'admin', parent: 'vopros', label: 'Администратору Марии', emoji: '👩🏼', href: 'https://t.me/psyteeth' },
     { id: 'anton', parent: 'vopros', label: 'Создателю\nПсихостоматологии №1\nАнтону Казакову', ava: 'tg-anton.jpg', href: 'https://t.me/happinessguy' },
     { id: 'bot',   parent: 'vopros', label: 'Боту про зубы и отношения', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
-    { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, detail: 'd-chat' }   // сначала окно про доступ по заявкам
+    { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, detail: 'd-chat' },   // сначала окно про доступ по заявкам
+    { id: 'faq1', parent: 'chat', sub: true, label: 'Пример', emoji: '❓', detail: 'd-faq1' }   // пример вопроса из чата
   ];
   // Эфиры: от свежего к старому. Обложка — превью видео из поста (assets/img/efir-<номер поста>.jpg),
   // текст в модалке — блок #d-e<N> в index.html (саммари + ссылка на пост). Пустые места — заглушки.
