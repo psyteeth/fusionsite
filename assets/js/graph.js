@@ -67,26 +67,8 @@
     { id: 'anton', parent: 'vopros', label: 'Создателю\nПсихостоматологии №1\nАнтону Казакову', ava: 'tg-anton.jpg', href: 'https://t.me/happinessguy' },
     { id: 'bot',   parent: 'vopros', label: 'Боту про зубы и отношения', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
     { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, detail: 'd-chat' },   // сначала окно про доступ по заявкам
-    { id: 'faq1', parent: 'chat', sub: true, at: [[9, 11], [1, 3]], label: 'Пример', emoji: '❓', detail: 'd-faq1' }   // пример вопроса из чата
+    { id: 'faq1', parent: 'chat', sub: true, at: [[1, 3], [9, 11]], label: 'Пример', emoji: '❓', detail: 'd-faq1' }   // пример вопроса из чата
   ];
-  // ВРЕМЕННО: варианты расположения маленьких кружков (?sub=1|2|3), выбираем с пользователем
-  //  1 — Зубное кунг-фу 9–11, Пример 1–3
-  //  2 — Зубное кунг-фу 1–3, Пример 9–11
-  //  3 — как 1, плюс «В чате» переставлен в кольце «Задать вопрос» (не сверху)
-  var SUBV = (location.search.match(/[?&]sub=([123])/) || [])[1] || '1';
-  (function () {
-    var kf = LEAVES.filter(function (l) { return l.id === 'kungfu'; })[0];
-    var fq = LEAVES.filter(function (l) { return l.id === 'faq1'; })[0];
-    if (SUBV === '2') { kf.at = [[1, 3], [9, 11]]; fq.at = [[9, 11], [1, 3]]; }
-    else { kf.at = [[9, 11], [1, 3]]; fq.at = [[1, 3], [9, 11]]; }
-    if (SUBV === '3') {   // «В чате» — вторым по кругу, а не последним
-      var i = LEAVES.findIndex(function (l) { return l.id === 'chat'; });
-      var chat = LEAVES.splice(i, 1)[0];
-      var j = LEAVES.findIndex(function (l) { return l.id === 'admin'; });
-      LEAVES.splice(j + 1, 0, chat);
-    }
-  })();
-
   // Эфиры: от свежего к старому. Обложка — превью видео из поста (assets/img/efir-<номер поста>.jpg),
   // текст в модалке — блок #d-e<N> в index.html (саммари + ссылка на пост). Пустые места — заглушки.
   var EFIRS = [
