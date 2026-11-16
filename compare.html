@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Сравнение размеров центрального круга</title>
+<style>
+  body{margin:0;padding:24px;background:#ecebe6;font-family:"Avenir Next",Avenir,Arial,sans-serif;color:#1b1b1b}
+  h1{font-size:22px;margin:0 0 6px}
+  p{margin:0 0 22px;color:#555}
+  .grid{display:flex;flex-wrap:wrap;gap:26px}
+  .v{background:#fff;border:1.5px solid #1b1b1b;border-radius:16px;padding:14px 16px 16px}
+  .v h2{font-size:18px;margin:0 0 10px}
+  .v h2 span{font-weight:400;color:#777;font-size:14px}
+  .row{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+  .frame{position:relative;overflow:hidden;border:1px solid #ccc;border-radius:8px;background:#f6f4ef}
+  .frame iframe{border:0;transform-origin:0 0;position:absolute;left:0;top:0}
+  .d{width:384px;height:240px}  .d iframe{width:1280px;height:800px;transform:scale(.3)}
+  .m{width:150px;height:304px}  .m iframe{width:375px;height:760px;transform:scale(.4)}
+  .v a{display:inline-block;margin-top:10px;font-size:14px;color:#00a1c9}
+</style>
+</head>
+<body>
+<h1>Размер центрального круга — выберите вариант</h1>
+<p>Слева — компьютер (1280×800), справа — телефон (375×760). Мини-копии живые: можно кликать.</p>
+<div class="grid" id="grid"></div>
+<script>
+  var V = [['0', 'сейчас'], ['1', 'чуть меньше'], ['2', 'меньше'], ['3', 'средний'], ['4', 'небольшой'], ['5', 'самый маленький']];
+  var g = document.getElementById('grid');
+  V.forEach(function (v) {
+    var url = './?size=' + v[0];
+    var card = document.createElement('div');
+    card.className = 'v';
+    card.innerHTML = '<h2>' + (v[0] === '0' ? 'Сейчас' : 'Вариант ' + v[0]) + ' <span>— ' + v[1] + '</span></h2>' +
+      '<div class="row"><div class="frame d"><iframe loading="lazy" src="' + url + '"></iframe></div>' +
+      '<div class="frame m"><iframe loading="lazy" src="' + url + '"></iframe></div></div>' +
+      '<a href="' + url + '" target="_blank">открыть отдельно</a>';
+    g.appendChild(card);
+  });
+</script>
+</body>
+</html>

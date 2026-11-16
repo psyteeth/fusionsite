@@ -184,10 +184,16 @@
     });
   }
 
+  // Размер центрального круга на главной: [доля от min(ширина, высота) на компьютере, доля ширины на телефоне].
+  // Временно: ?size=1…5 для сравнения вариантов (страница compare.html).
+  var PSY_SIZES = { '0': [0.19, 0.31], '1': [0.165, 0.29], '2': [0.15, 0.27], '3': [0.135, 0.25], '4': [0.12, 0.23], '5': [0.105, 0.21] };
+  var sm = /[?&]size=(\d)/.exec(location.search);
+  var PSY_SIZE = PSY_SIZES[sm && PSY_SIZES[sm[1]] ? sm[1] : '0'];
+
   function layoutHome() {
     var cx = W / 2, cy = H / 2 + (mobile ? 10 : 15);
     var m = Math.min(W, H);
-    var R = mobile ? W * 0.31 : m * 0.19;
+    var R = mobile ? W * PSY_SIZE[1] : m * PSY_SIZE[0];
     var hubR = mobile ? W * 0.115 : m * 0.072;
     var dx = mobile ? W * 0.3 : Math.min(W * 0.26, 360);
     var dy = mobile ? H * 0.28 : H * 0.28;
