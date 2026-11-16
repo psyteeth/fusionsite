@@ -401,6 +401,19 @@
   modal.querySelector('.modal__close').addEventListener('click', closeModal);
   modal.addEventListener('click', function (ev) { if (ev.target === modal) closeModal(); });
 
+  // ---------- Временное сравнение шрифтов (?fonts=1 / ?fonts=2) ----------
+  var fm = /[?&]fonts=(\d)/.exec(location.search);
+  if (fm) {
+    var FONTS = {
+      '1': { uslugi: 'Futura', blog: 'Georgia', efiry: 'Avenir Next', vopros: 'Noteworthy (рукописный)' },
+      '2': { uslugi: 'Didot', blog: 'Gill Sans', efiry: 'American Typewriter', vopros: 'Baskerville курсив' }
+    }[fm[1]];
+    if (FONTS) {
+      document.body.classList.add('fontdemo', 'fonts-' + fm[1]);
+      Object.keys(FONTS).forEach(function (id) { nodes[id].el.querySelector('.v-mid').setAttribute('data-font', FONTS[id]); });
+    }
+  }
+
   // ---------- Старт ----------
   active = idFromHash();
   document.body.dataset.active = active;
