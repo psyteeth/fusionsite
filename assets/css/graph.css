@@ -276,8 +276,7 @@ button.cta{border:0;cursor:pointer;font-family:inherit}
   background:radial-gradient(circle at 50% 45%,rgba(58,52,56,.82) 0%,rgba(58,52,56,.78) 52%,rgba(196,40,30,.62) 100%) !important;
   border-color:rgba(196,40,30,.75);box-shadow:0 0 calc(var(--r) * .24px) rgba(196,40,30,.35)}
 .node--leaf[data-id="kungfu"]:hover .disc{border-color:rgba(196,40,30,.95);box-shadow:0 0 calc(var(--r) * .34px) rgba(196,40,30,.5)}
-/* цена «за месяц» дробью: 15 000 ₽ / черта / месяц */
+/* цена «за месяц»: 15 000 ₽ и под ним «месяц», близко друг к другу */
 .node--leaf .pf{display:flex;flex-direction:column;align-items:center;line-height:1}
-.node--leaf .pf b{white-space:nowrap}
-.node--leaf .pf i{display:block;width:62%;height:1.5px;background:currentColor;margin:.32em 0 .3em}
-.node--leaf .pf span{font-size:max(10px,.78em);font-weight:600}
+.node--leaf .pf b{white-space:nowrap;font-size:1.12em}
+.node--leaf .pf span{font-size:max(10.5px,.9em);font-weight:600;margin-top:.14em}
