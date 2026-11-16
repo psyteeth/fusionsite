@@ -187,7 +187,7 @@
   function layoutHome() {
     var cx = W / 2, cy = H / 2 + (mobile ? 10 : 15);
     var m = Math.min(W, H);
-    var R = mobile ? W * 0.27 : m * 0.19;
+    var R = mobile ? W * 0.31 : m * 0.19;
     var hubR = mobile ? W * 0.13 : m * 0.085;
     var dx = mobile ? W * 0.3 : Math.min(W * 0.26, 360);
     var dy = mobile ? H * 0.28 : H * 0.28;
@@ -401,17 +401,24 @@
   modal.querySelector('.modal__close').addEventListener('click', closeModal);
   modal.addEventListener('click', function (ev) { if (ev.target === modal) closeModal(); });
 
-  // ---------- Временное сравнение шрифтов (?fonts=1 / ?fonts=2) ----------
+  // ---------- Временное сравнение шрифтов (?fonts=1 … ?fonts=4) ----------
+  var FONT_NAMES = { georgia: 'Georgia', avenir: 'Avenir Next', palatino: 'Palatino', optima: 'Optima',
+    didot: 'Didot', gill: 'Gill Sans', typewriter: 'American Typewriter', baskerville: 'Baskerville курсив' };
+  var FONT_SETS = {
+    '1': { uslugi: 'palatino', blog: 'georgia', efiry: 'avenir', vopros: 'optima' },
+    '2': { uslugi: 'georgia', blog: 'georgia', efiry: 'georgia', vopros: 'georgia' },
+    '3': { uslugi: 'avenir', blog: 'avenir', efiry: 'avenir', vopros: 'avenir' },
+    '4': { uslugi: 'didot', blog: 'gill', efiry: 'typewriter', vopros: 'baskerville' }
+  };
   var fm = /[?&]fonts=(\d)/.exec(location.search);
-  if (fm) {
-    var FONTS = {
-      '1': { uslugi: 'Futura', blog: 'Georgia', efiry: 'Avenir Next', vopros: 'Noteworthy (рукописный)' },
-      '2': { uslugi: 'Didot', blog: 'Gill Sans', efiry: 'American Typewriter', vopros: 'Baskerville курсив' }
-    }[fm[1]];
-    if (FONTS) {
-      document.body.classList.add('fontdemo', 'fonts-' + fm[1]);
-      Object.keys(FONTS).forEach(function (id) { nodes[id].el.querySelector('.v-mid').setAttribute('data-font', FONTS[id]); });
-    }
+  if (fm && FONT_SETS[fm[1]]) {
+    document.body.classList.add('fontdemo');
+    var set_ = FONT_SETS[fm[1]];
+    Object.keys(set_).forEach(function (id) {
+      var v = nodes[id].el.querySelector('.v-mid');
+      v.classList.add('f-' + set_[id]);
+      v.setAttribute('data-font', FONT_NAMES[set_[id]]);
+    });
   }
 
   // ---------- Старт ----------
