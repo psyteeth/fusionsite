@@ -68,7 +68,7 @@
   // Эфиры: от свежего к старому. Обложка — превью видео из поста (assets/img/efir-<номер поста>.jpg),
   // текст в модалке — блок #d-e<N> в index.html (саммари + ссылка на пост). Пустые места — заглушки.
   var EFIRS = [
-    { title: 'Чем дышат клиенты Психостоматологии №1', img: 'efir-780.jpg' },
+    { title: 'Чем дышат клиенты\nПсихостоматологии №1', img: 'efir-780.jpg' },   // \n — перенос строки в подписи
     { title: 'Зубы и чувства, которые за ними прячутся', img: 'efir-777.jpg' },
     { title: 'Стабилизатор или катализатор', img: 'efir-772.jpg' },
     { title: 'Расстройство', img: 'efir-767.jpg' },
@@ -149,8 +149,8 @@
       root = el(def.href ? 'a' : 'button', 'node node--leaf' + (def.sun ? ' is-sun' : '') + (def.img ? ' has-img' : '') + (def.placeholder ? ' is-ph' : ''));
       if (def.href) { root.href = def.href; if (ext) { root.target = '_blank'; root.rel = 'noopener'; } }
       else root.type = 'button';
-      root.setAttribute('aria-label', def.label);
-      root.title = def.label;
+      root.setAttribute('aria-label', def.label.replace(/\n/g, ' '));
+      root.title = def.label.replace(/\n/g, ' ');
       var d2 = el('span', 'disc');
       if (def.img) d2.style.backgroundImage = "url('" + IMG + def.img + "')";
       else if (def.emoji) d2.appendChild(el('span', 'emo', def.emoji));
@@ -159,7 +159,8 @@
       else d2.appendChild(el('span', 'in' + ((def.inner || '').length <= 2 ? ' in--big' : ''), def.inner || ''));
       if (def.dotSvg) d2.appendChild(el('span', 'dot-ico', def.dotSvg));
       root.appendChild(d2);
-      root.appendChild(el('span', 'lab' + (/\s/.test(def.label) ? '' : ' lab--one'), def.label));   // одно слово — без переносов
+      // одно слово или строки, заданные вручную через \n, — без автоматических переносов
+      root.appendChild(el('span', 'lab' + (/\n/.test(def.label) ? ' lab--pre' : /\s/.test(def.label) ? '' : ' lab--one'), def.label));
       if (def.detail) root.addEventListener('click', function () { openDetail(def.detail); });
     }
     root.dataset.id = def.id;
@@ -326,7 +327,7 @@
       ry = H / 2 - 64 - 74;
       rx = Math.min(W / 2 - 150, ry * 1.55);
       leafR = Math.max(30, Math.min(56, (2 * Math.PI * ry / n) * 0.3));
-      Rc = Math.min(m * 0.21, ry - leafR - 24);
+      Rc = Math.min(m * 0.21, ry - leafR - 52);   // место под две строки подписи у верхних кружков
     }
 
     // молекула: на компьютере — в разрыве кольца листьев со стороны своего угла (ближе к центру, заметно);
