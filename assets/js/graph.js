@@ -433,7 +433,8 @@
   function go(id) {
     // клик по большому кругу на главной — увеличить его; повторный — вернуть главную
     if (id === 'psy' && active === 'psy') { location.hash = 'psy'; return; }
-    if (id === active) return;
+    // повторный клик по большому кругу раздела — назад на главную
+    if (id === active) { history.pushState(null, '', location.pathname + location.search); apply(); return; }
     var hub = HUBS.filter(function (h) { return h.id === id; })[0];
     var hash = hub.hash ? '#' + hub.hash : location.pathname + location.search;
     if (hub.hash) location.hash = hub.hash;

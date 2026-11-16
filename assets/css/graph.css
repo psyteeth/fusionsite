@@ -219,3 +219,6 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
 /* Подпись из одного слова (например «Очковтирательство») — целиком, без переноса */
 .node--leaf .lab.lab--one{max-width:none;hyphens:manual;-webkit-hyphens:manual;white-space:nowrap}
 .node--leaf .lab.lab--pre{max-width:none;hyphens:manual;-webkit-hyphens:manual;white-space:pre}
+
+/* Большой круг раздела кликабелен: повторный клик возвращает на главную */
+.node--hub.m-full{cursor:pointer}
