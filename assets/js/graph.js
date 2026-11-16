@@ -401,26 +401,6 @@
   modal.querySelector('.modal__close').addEventListener('click', closeModal);
   modal.addEventListener('click', function (ev) { if (ev.target === modal) closeModal(); });
 
-  // ---------- Временное сравнение шрифтов (?fonts=1 … ?fonts=4) ----------
-  var FONT_NAMES = { georgia: 'Georgia', avenir: 'Avenir Next', palatino: 'Palatino', optima: 'Optima',
-    didot: 'Didot', gill: 'Gill Sans', typewriter: 'American Typewriter', baskerville: 'Baskerville курсив' };
-  var FONT_SETS = {
-    '1': { uslugi: 'palatino', blog: 'georgia', efiry: 'avenir', vopros: 'optima' },
-    '2': { uslugi: 'georgia', blog: 'georgia', efiry: 'georgia', vopros: 'georgia' },
-    '3': { uslugi: 'avenir', blog: 'avenir', efiry: 'avenir', vopros: 'avenir' },
-    '4': { uslugi: 'didot', blog: 'gill', efiry: 'typewriter', vopros: 'baskerville' }
-  };
-  var fm = /[?&]fonts=(\d)/.exec(location.search);
-  if (fm && FONT_SETS[fm[1]]) {
-    document.body.classList.add('fontdemo');
-    var set_ = FONT_SETS[fm[1]];
-    Object.keys(set_).forEach(function (id) {
-      var v = nodes[id].el.querySelector('.v-mid');
-      v.classList.add('f-' + set_[id]);
-      v.setAttribute('data-font', FONT_NAMES[set_[id]]);
-    });
-  }
-
   // ---------- Старт ----------
   active = idFromHash();
   document.body.dataset.active = active;
