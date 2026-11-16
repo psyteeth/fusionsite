@@ -50,7 +50,7 @@
     { id: 'vip',    parent: 'uslugi', label: 'VIP-консультация', inner: '30 000 ₽', detail: 'd-vip' },
     { id: 'group',  parent: 'uslugi', label: 'Групповая работа', inner: '15 000 ₽<br>/ мес', detail: 'd-group' },
     { id: 'clinic', parent: 'uslugi', label: 'Сотрудничество с клиниками и стоматологами', inner: '🦷', detail: 'd-clinic' },
-    { id: 'kungfu', parent: 'group', sub: true, label: 'Зубное кунг-фу', inner: '', detail: 'd-kungfu' },
+    { id: 'kungfu', parent: 'group', sub: true, at: [[9, 11], [1, 3]], label: 'Зубное кунг-фу', inner: '', detail: 'd-kungfu' },
 
     { id: 'a1', parent: 'blog', label: 'Как с зубами, так и с людьми', detail: 'd-a1', img: '63343139-pexels-karolina-grab.jpg' },
     { id: 'a2', parent: 'blog', label: 'Нейрофизиология отношений', detail: 'd-a2', img: '33373232-robina-weermeijer-3K.jpg' },
@@ -68,7 +68,7 @@
     { id: 'anton', parent: 'vopros', label: 'Создателю\nПсихостоматологии №1\nАнтону Казакову', ava: 'tg-anton.jpg', href: 'https://t.me/happinessguy' },
     { id: 'bot',   parent: 'vopros', label: 'Боту про зубы и отношения', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
     { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, detail: 'd-chat' },   // сначала окно про доступ по заявкам
-    { id: 'faq1', parent: 'chat', sub: true, label: 'Пример', emoji: '❓', detail: 'd-faq1' }   // пример вопроса из чата
+    { id: 'faq1', parent: 'chat', sub: true, at: [[9, 11], [1, 3]], label: 'Пример', emoji: '❓', detail: 'd-faq1' }   // пример вопроса из чата
   ];
   // Эфиры: от свежего к старому. Обложка — превью видео из поста (assets/img/efir-<номер поста>.jpg),
   // текст в модалке — блок #d-e<N> в index.html (саммари + ссылка на пост). Пустые места — заглушки.
@@ -369,17 +369,17 @@
       var x = cx2 + Math.cos(a) * rx, y = cy2 + Math.sin(a) * ry;
       // подпись под кружком не должна заходить под центральный круг (с запасом на покачивание):
       // если заходит — отодвигаем кружок от центра
-      var lw = mobile ? 56 : 80, lh = (mobile ? 15 : 17) * Math.min(4, Math.ceil(k.label.length / (mobile ? 15 : 22)));
+      var lw = mobile ? 62 : 82, lh = (mobile ? 15 : 17) * Math.min(4, Math.ceil(k.label.length / (mobile ? 15 : 22)));
       var ux = x - cx2, uy = y - cy2, ul = Math.hypot(ux, uy) || 1;
       ux /= ul; uy /= ul;
       for (var step = 0; step < 40; step++) {
         var ltop = y + leafR + 4, bot = ltop + lh, lx = x - lw, rx2 = x + lw;
         var nx = Math.max(lx, Math.min(cx2, rx2)), ny = Math.max(ltop, Math.min(cy2, bot));
-        var clear = Math.hypot(nx - cx2, ny - cy2) > Rc + 14 && Math.hypot(x - cx2, y - cy2) > Rc + leafR + 14;
+        var clear = Math.hypot(nx - cx2, ny - cy2) > Rc + 22 && Math.hypot(x - cx2, y - cy2) > Rc + leafR + 18;
         if (clear) break;
         var nx2 = x + ux * 6;
-        if (nx2 > leafR + 8 && nx2 < W - leafR - 8) x = nx2;
-        y += (uy || 1) * 6;
+        if (nx2 > leafR + 8 && nx2 < W - leafR - 8) { x = nx2; y += uy * 6; }
+        else y += (uy < 0 ? -1 : 1) * 6;   // по горизонтали упёрлись в край — двигаем только по вертикали
       }
       if (mobile) stageH = Math.max(stageH, y + leafR + lh + 70);
       else if (y + leafR + 4 + lh > H - 62) y = H - 62 - lh - leafR - 4;   // над плашкой psyteeth.ru внизу
@@ -390,6 +390,21 @@
         var d = leafR + sr + (mobile ? 30 : 40);
         var sx = x + ux * d, sy = y + uy * d;
         var lim = mobile ? sr + 46 : sr + 70;
+        // место по циферблату вокруг «родителя»: s.at = [[9, 11], [1, 3]] — берём первое время из диапазонов,
+        // где кружок не вылезает за экран и не налезает на центральный круг (12 — сверху, 3 — справа)
+        if (s.at) {
+          var found = false;
+          s.at.forEach(function (rg) {
+            for (var hr = rg[0]; !found && hr <= rg[1] + 0.001; hr += 0.25) {
+              var ang = (hr / 12) * 2 * Math.PI - Math.PI / 2;
+              var tx = x + Math.cos(ang) * d, ty = y + Math.sin(ang) * d;
+              if (tx < lim || tx > W - lim || ty < sr + 24) continue;
+              if (Math.hypot(tx - cx2, ty - cy2) < Rc + sr + 30) continue;
+              sx = tx; sy = ty; found = true;
+            }
+          });
+          if (found) { set(s.id, sx, sy, sr, 1, 'ring', 'b'); return; }
+        }
         if (sx < lim || sx > W - lim) {   // упёрлись в край экрана — ставим над «родителем»
           sx = Math.max(lim, Math.min(W - lim, x));
           sy = y - leafR - sr - (mobile ? 30 : 40);
