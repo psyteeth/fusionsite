@@ -209,7 +209,7 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
 .node--leaf.lab-b .lab{left:0;width:max-content;max-width:160px;transform:translateX(-50%);
   background:rgba(246,244,239,.88);padding:2px 7px;border-radius:9px}
 @media (max-width:699px){
-  .node--leaf.lab-b .lab{left:0;width:max-content;max-width:104px;-webkit-line-clamp:4;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+  .node--leaf.lab-b .lab{left:0;width:max-content;max-width:112px;-webkit-line-clamp:4;hyphens:manual;-webkit-hyphens:manual}
   /* Эфиры: заголовок крупнее, подпись про канал пониже */
   .node--hub[data-id="efiry"].m-full .v-full{gap:5px;padding:0 14px}
   .node--hub[data-id="efiry"].m-full .v-full .h{font-size:21px}
