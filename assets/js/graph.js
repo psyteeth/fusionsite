@@ -316,31 +316,49 @@
   }
 
   // ---------- Анимация ----------
+  // «Уменьшение движения» в системе: переходы остаются плавными, но без постоянного покачивания.
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var first = true;
+  var last = 0;
 
   function frame(ts) {
-    var k = first || reduce ? 1 : 0.085;
-    first = false;
+    var dt = last ? Math.min(ts - last, 64) : 16.7;
+    last = ts;
+    // скорость не зависит от частоты кадров (60/120 Гц, подтормаживания)
+    var k = 1 - Math.pow(1 - 0.085, dt / 16.7);
     var t = ts / 1000;
     order.forEach(function (n) {
       var g = n.t;
       n.x += (g.x - n.x) * k; n.y += (g.y - n.y) * k;
       n.r += (g.r - n.r) * k; n.op += (g.op - n.op) * k;
+      if (Math.abs(g.r - n.r) < 0.05) n.r = g.r;
+      if (Math.abs(g.op - n.op) < 0.005) n.op = g.op;
       var fx = reduce ? 0 : Math.sin(t * 0.7 + n.phase) * n.amp;
       var fy = reduce ? 0 : Math.cos(t * 0.55 + n.phase * 1.3) * n.amp;
       n.dx = n.x + fx; n.dy = n.y + fy;
-      n.el.style.transform = 'translate(' + n.dx.toFixed(1) + 'px,' + n.dy.toFixed(1) + 'px)';
-      n.el.style.opacity = n.op.toFixed(3);
-      n.el.style.setProperty('--r', n.r.toFixed(1));
-      n.el.style.pointerEvents = n.op > 0.5 ? '' : 'none';
+      var hidden = n.op < 0.01;
+      if (hidden !== n._hidden) { n.el.style.visibility = hidden ? 'hidden' : ''; n._hidden = hidden; }
+      if (hidden) return;
+      // только transform/opacity каждый кадр (дёшево); размер — лишь пока он меняется
+      var tr = 'translate3d(' + n.dx.toFixed(1) + 'px,' + n.dy.toFixed(1) + 'px,0)';
+      if (tr !== n._tr) { n.el.style.transform = tr; n._tr = tr; }
+      var o = n.op.toFixed(2);
+      if (o !== n._o) { n.el.style.opacity = o; n._o = o; }
+      var r = n.r.toFixed(1);
+      if (r !== n._r) { n.el.style.setProperty('--r', r); n._r = r; }
+      var pe = n.op > 0.5 ? '' : 'none';
+      if (pe !== n._pe) { n.el.style.pointerEvents = pe; n._pe = pe; }
     });
     edges.forEach(function (ed) {
       var a = nodes[ed[0]], b = nodes[ed[1]];
       var op = Math.min(a.op, b.op);
+      if (op < 0.01) {
+        if (!ed._off) { ed.line.setAttribute('opacity', '0'); ed._off = true; }
+        return;
+      }
+      ed._off = false;
       ed.line.setAttribute('x1', a.dx.toFixed(1)); ed.line.setAttribute('y1', a.dy.toFixed(1));
       ed.line.setAttribute('x2', b.dx.toFixed(1)); ed.line.setAttribute('y2', b.dy.toFixed(1));
-      ed.line.setAttribute('opacity', (op * 0.55).toFixed(3));
+      ed.line.setAttribute('opacity', (op * 0.55).toFixed(2));
     });
     requestAnimationFrame(frame);
   }
