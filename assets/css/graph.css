@@ -10,6 +10,7 @@
   --disc:#fff;
 }
 html,body{margin:0;background:var(--bg);color:var(--ink)}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:Arial,"Noto Color Emoji",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit}
 
@@ -99,7 +100,8 @@ a{color:inherit}
   .lab-b .lab{left:-75px;width:150px;font-size:12.5px}
   .v-full .h{font-size:clamp(15px,calc(var(--r) * .13px),24px);overflow-wrap:anywhere;hyphens:auto}
   .v-full{padding:0 calc(var(--r) * .14px)}
-  .cta{padding:8px 18px;font-size:14px}
+  .cta{padding:6px 16px;font-size:13px;margin-top:2px;box-shadow:0 2px 6px rgba(255,81,54,.25)}
+  .node--hub[data-id="uslugi"].m-full .v-full{padding:0 calc(var(--r) * .17px) calc(var(--r) * .06px)}
 }
 @media (max-width:699px){
   body:not([data-active="psy"]) .brand{display:none}

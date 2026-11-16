@@ -26,7 +26,7 @@
       draft: true, tap: true },
     { id: 'uslugi', hash: 'uslugi', title: 'Услуги', mini: '$',
       desc: 'Если тебя что-то беспокоит с зубами, деснами, прикусом, кривизной, просто приходи на бесплатную диагностику',
-      btn: { text: 'Записаться', detail: 'd-diag' } },   // кнопка открывает окно бесплатной диагностики (запись там — через Марию)
+      btn: { text: 'Записаться', detail: 'd-diag' }, roomy: 0.3 },   // кнопка открывает окно бесплатной диагностики (запись там — через Марию)
     { id: 'blog', hash: 'blog', title: 'Блог', mini: 'Б', svg: ICON_DOC,
       desc: '11 статей на темы от нейрофизиологии отношений до третьей сепарации, а в общем — о том, как зубы отзываются на то, что происходит между людьми' },
     { id: 'efiry', hash: 'efiry', title: 'Эфиры', mini: 'Э', svg: ICON_PLAY,
@@ -332,7 +332,8 @@
       cx2 = W / 2; cy2 = top + leafR + ry;
       // круг поменьше, чтобы подписи боковых сателлитов не заходили под него
       Rc = roomy ? Math.min(W * 0.25, rx - leafR - 10) : Math.min(W * 0.22, rx - leafR - 12);
-      if (roomy && n <= 5) Rc = W * 0.34;   // мало кружков (Задать вопрос) — круг крупнее, кружки отодвинутся ниже сами
+      var rk = HUBS.filter(function (h) { return h.id === id; })[0];
+      if (roomy && n <= 5) Rc = W * (typeof rk.roomy === 'number' ? rk.roomy : 0.34);   // мало кружков (Задать вопрос) — круг крупнее, кружки отодвинутся ниже сами
       stageH = cy2 + ry + leafR + 60;
     } else {
       // кольцо чуть выше центра и ниже край — чтобы плашка psyteeth.ru внизу не закрывала подписи
@@ -379,11 +380,13 @@
         lw = Math.max.apply(null, lines.map(function (t) { return t.length; })) * charW; nl = lines.length;
       } else { lw = Math.min(maxW, k.label.length * charW); nl = Math.min(4, Math.ceil(k.label.length * charW / maxW)); }
       return { k: k, x: cx2 + Math.cos(a) * rx, y: cy2 + Math.sin(a) * ry,
-               hw: Math.max(leafR, lw / 2 + 4), lh: nl * lineH + 6 };
+               hw: Math.max(leafR, lw / 2 + 4), lh: nl * lineH + 6,
+               // на телефоне над кружком с «внуком» (Зубное кунг-фу) держим место под него и его подпись
+               st: mobile && childrenOf(k.id).length ? leafR + 48 : 0 };
     });
     // 2) раздвигаем: кружки с подписями не налезают на центральный круг, на молекулу, друг на друга и не выходят за экран
     var molR = tr + sd + sr + 12, topMin = mobile ? 128 : 14, botMax = mobile ? 1e9 : H - 62, gap = 8;
-    function box(p) { return { l: p.x - p.hw, r: p.x + p.hw, t: p.y - leafR, b: p.y + leafR + 4 + p.lh }; }
+    function box(p) { return { l: p.x - p.hw, r: p.x + p.hw, t: p.y - leafR - p.st, b: p.y + leafR + 4 + p.lh }; }
     function distToBox(bx, px, py) {
       var nx = Math.max(bx.l, Math.min(px, bx.r)), ny = Math.max(bx.t, Math.min(py, bx.b));
       return { d: Math.hypot(nx - px, ny - py), nx: nx, ny: ny };
@@ -412,7 +415,7 @@
       }
       P.forEach(function (p) {   // в пределах экрана
         p.x = Math.max(p.hw + 6, Math.min(W - p.hw - 6, p.x));
-        p.y = Math.max(topMin + leafR, Math.min(botMax - leafR - 4 - p.lh, p.y));
+        p.y = Math.max(topMin + leafR + p.st, Math.min(botMax - leafR - 4 - p.lh, p.y));
       });
       if (!moved) break;
     }
@@ -444,6 +447,9 @@
               var tx = x + Math.cos(ang) * d, ty = y + Math.sin(ang) * d;
               if (tx < lim || tx > W - lim || ty < sr + 24) continue;
               if (Math.hypot(tx - cx2, ty - cy2) < Rc + sr + 30) continue;
+              // не на луч «родитель — центр»
+              var da = Math.abs(Math.atan2(ty - y, tx - x) - Math.atan2(cy2 - y, cx2 - x));
+              if (Math.min(da, 2 * Math.PI - da) < 0.6) continue;
               sx = tx; sy = ty; found = true;
             }
           });
