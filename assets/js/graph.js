@@ -365,25 +365,56 @@
     // не ставить листья на линию к молекуле
     var toMol = Math.atan2(my - cy2, mx - cx2);
     var angles = evenOnEllipse(rx, ry, n, mobile ? toMol : molA, mobile ? 0 : 2 * (tr + sd + sr) + 2 * leafR);
-    kids.forEach(function (k, i) {
-      var a = angles[i];
-      var x = cx2 + Math.cos(a) * rx, y = cy2 + Math.sin(a) * ry;
-      // подпись под кружком не должна заходить под центральный круг (с запасом на покачивание):
-      // если заходит — отодвигаем кружок от центра
-      var lw = mobile ? 62 : 82, lh = (mobile ? 15 : 17) * Math.min(4, Math.ceil(k.label.length / (mobile ? 15 : 22)));
+    // 1) начальные места на эллипсе; у каждого кружка — «коробка» из самого кружка и подписи под ним
+    var charW = mobile ? 6.6 : 7.6, maxW = mobile ? 112 : 160, lineH = mobile ? 15 : 17;
+    var P = kids.map(function (k, i) {
+      var a = angles[i], lines = k.label.split('\n'), lw, nl;
+      if (lines.length > 1 || !/\s/.test(k.label)) {   // строки вручную или одно слово — без переносов
+        lw = Math.max.apply(null, lines.map(function (t) { return t.length; })) * charW; nl = lines.length;
+      } else { lw = Math.min(maxW, k.label.length * charW); nl = Math.min(4, Math.ceil(k.label.length * charW / maxW)); }
+      return { k: k, x: cx2 + Math.cos(a) * rx, y: cy2 + Math.sin(a) * ry,
+               hw: Math.max(leafR, lw / 2 + 4), lh: nl * lineH + 6 };
+    });
+    // 2) раздвигаем: кружки с подписями не налезают на центральный круг, на молекулу, друг на друга и не выходят за экран
+    var molR = tr + sd + sr + 12, topMin = mobile ? 128 : 14, botMax = mobile ? 1e9 : H - 62, gap = 8;
+    function box(p) { return { l: p.x - p.hw, r: p.x + p.hw, t: p.y - leafR, b: p.y + leafR + 4 + p.lh }; }
+    function distToBox(bx, px, py) {
+      var nx = Math.max(bx.l, Math.min(px, bx.r)), ny = Math.max(bx.t, Math.min(py, bx.b));
+      return { d: Math.hypot(nx - px, ny - py), nx: nx, ny: ny };
+    }
+    for (var it = 0; it < 120; it++) {
+      var moved = false;
+      P.forEach(function (p) {
+        // центральный круг и молекула — отталкиваем от центра
+        [[cx2, cy2, Rc + 18], [mx, my, molR]].forEach(function (c) {
+          var bx = box(p), q = distToBox(bx, c[0], c[1]);
+          if (q.d < c[2]) {
+            var vx = p.x - c[0], vy = (p.y + p.lh / 2) - c[1], vl = Math.hypot(vx, vy) || 1;
+            p.x += vx / vl * 4; p.y += vy / vl * 4; moved = true;
+          }
+        });
+      });
+      for (var i2 = 0; i2 < P.length; i2++) for (var j2 = i2 + 1; j2 < P.length; j2++) {
+        var A = box(P[i2]), B = box(P[j2]);
+        var ox = Math.min(A.r, B.r) - Math.max(A.l, B.l) + gap, oy = Math.min(A.b, B.b) - Math.max(A.t, B.t) + gap;
+        if (ox > 0 && oy > 0) {   // пересекаются — разводим по той оси, где перекрытие меньше
+          var up = P[i2].y < P[j2].y ? P[i2] : P[j2], dn = up === P[i2] ? P[j2] : P[i2];
+          var lf = P[i2].x < P[j2].x ? P[i2] : P[j2], rt = lf === P[i2] ? P[j2] : P[i2];
+          if (oy <= ox) { up.y -= oy / 2; dn.y += oy / 2; } else { lf.x -= ox / 2; rt.x += ox / 2; }
+          moved = true;
+        }
+      }
+      P.forEach(function (p) {   // в пределах экрана
+        p.x = Math.max(p.hw + 6, Math.min(W - p.hw - 6, p.x));
+        p.y = Math.max(topMin + leafR, Math.min(botMax - leafR - 4 - p.lh, p.y));
+      });
+      if (!moved) break;
+    }
+    P.forEach(function (p) {
+      var k = p.k, x = p.x, y = p.y;
       var ux = x - cx2, uy = y - cy2, ul = Math.hypot(ux, uy) || 1;
       ux /= ul; uy /= ul;
-      for (var step = 0; step < 40; step++) {
-        var ltop = y + leafR + 4, bot = ltop + lh, lx = x - lw, rx2 = x + lw;
-        var nx = Math.max(lx, Math.min(cx2, rx2)), ny = Math.max(ltop, Math.min(cy2, bot));
-        var clear = Math.hypot(nx - cx2, ny - cy2) > Rc + 22 && Math.hypot(x - cx2, y - cy2) > Rc + leafR + 18;
-        if (clear) break;
-        var nx2 = x + ux * 6;
-        if (nx2 > leafR + 8 && nx2 < W - leafR - 8) { x = nx2; y += uy * 6; }
-        else y += (uy < 0 ? -1 : 1) * 6;   // по горизонтали упёрлись в край — двигаем только по вертикали
-      }
-      if (mobile) stageH = Math.max(stageH, y + leafR + lh + 70);
-      else if (y + leafR + 4 + lh > H - 62) y = H - 62 - lh - leafR - 4;   // над плашкой psyteeth.ru внизу
+      if (mobile) stageH = Math.max(stageH, y + leafR + p.lh + 70);
       set(k.id, x, y, leafR, 1, 'ring', 'b');
       // подпись маленького кружка — со стороны, противоположной «родителю», чтобы не налезать на него
       function subLab(sx, sy) {
