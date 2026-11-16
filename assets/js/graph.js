@@ -33,7 +33,10 @@
       desc: 'на темы от «медалек за хорошесть» до запрета на победу, а в общем — как перестать держать лицо в отношениях, чтобы за это не платили зубы',
       foot: { text: 'Больше эфиров и подкастов в Телеграм-канале', href: 'https://t.me/psy_teeth_official' } },
     { id: 'vopros', hash: 'vopros', title: 'Задать вопрос', mini: '?',
-      desc: 'Кому задать вопрос?' }
+      desc: 'о том, как всё устроено и как проходит работа, — в&nbsp;чате психостоматологии<br>' +
+            'про запись и технические нюансы — администратору Марии<br>' +
+            'разобрать, что кто-то бесит или болит зуб, без диагностики — боту<br>' +
+            'лично создателю — Антону Казакову', roomy: true }
   ];
   // угол, в который уходит «молекула», когда раздел в центре (sx, sy: -1 лево/верх, 1 право/низ)
   var CORNER = { blog: [-1, 1], efiry: [-1, -1], uslugi: [1, 1], vopros: [1, -1] };
@@ -61,7 +64,7 @@
     { id: 'a11', parent: 'blog', label: 'Закрой свой рот! Ты слишком ...', detail: 'd-a11', img: '63646561-21____.jpg' },
 
     { id: 'admin', parent: 'vopros', label: 'Администратору Марии', emoji: '👩🏼', href: 'https://t.me/psyteeth' },
-    { id: 'anton', parent: 'vopros', label: 'Создателю психостоматологии Антону Казакову', ava: 'tg-anton.jpg', href: 'https://t.me/happinessguy' },
+    { id: 'anton', parent: 'vopros', label: 'Создателю\nПсихостоматологии №1\nАнтону Казакову', ava: 'tg-anton.jpg', href: 'https://t.me/happinessguy' },
     { id: 'bot',   parent: 'vopros', label: 'Боту про зубы и отношения', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
     { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, href: 'https://t.me/psy_teeth' }
   ];
@@ -315,11 +318,12 @@
       var top = 158;                      // ниже молекулы и подписи «на главную»
       ry = Math.max(200, n * 31, (H - top - 2 * leafR - 70) / 2);
       // у раздела с длинным текстом в круге (Эфиры) круг чуть больше, лучи чуть шире
-      var roomy = HUBS.some(function (h) { return h.id === id && h.foot; });
+      var roomy = HUBS.some(function (h) { return h.id === id && (h.foot || h.roomy); });
       rx = W / 2 - (roomy ? 56 : 62);
       cx2 = W / 2; cy2 = top + leafR + ry;
       // круг поменьше, чтобы подписи боковых сателлитов не заходили под него
       Rc = roomy ? Math.min(W * 0.25, rx - leafR - 10) : Math.min(W * 0.22, rx - leafR - 12);
+      if (roomy && n <= 5) Rc = W * 0.34;   // мало кружков (Задать вопрос) — круг крупнее, кружки отодвинутся ниже сами
       stageH = cy2 + ry + leafR + 60;
     } else {
       // кольцо чуть выше центра и ниже край — чтобы плашка psyteeth.ru внизу не закрывала подписи
@@ -376,6 +380,7 @@
         y += (uy || 1) * 6;
       }
       if (mobile) stageH = Math.max(stageH, y + leafR + lh + 70);
+      else if (y + leafR + 4 + lh > H - 62) y = H - 62 - lh - leafR - 4;   // над плашкой psyteeth.ru внизу
       set(k.id, x, y, leafR, 1, 'ring', 'b');
       childrenOf(k.id).forEach(function (s) {
         var sr = leafR * (mobile ? 0.7 : 0.62);
