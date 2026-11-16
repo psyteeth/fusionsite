@@ -60,9 +60,9 @@
     { id: 'a10', parent: 'blog', label: 'Инструкция по эксплуатации "БЕЗЗУБЫХ".', detail: 'd-a10', img: '65333466-leary_circumplex_lig.png' },
     { id: 'a11', parent: 'blog', label: 'Закрой свой рот! Ты слишком ...', detail: 'd-a11', img: '63646561-21____.jpg' },
 
-    { id: 'admin', parent: 'vopros', label: 'Администратору', emoji: '👩🏼', href: 'https://t.me/psyteeth' },
-    { id: 'anton', parent: 'vopros', label: 'Антону Казакову, создателю', ava: 'tg-anton.jpg', href: 'https://t.me/happinessguy' },
-    { id: 'bot',   parent: 'vopros', label: 'Драма Киллер Боту — про отношения и зубы', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
+    { id: 'admin', parent: 'vopros', label: 'Администратору Марии', emoji: '👩🏼', href: 'https://t.me/psyteeth' },
+    { id: 'anton', parent: 'vopros', label: 'Создателю психостоматологии Антону Казакову', ava: 'tg-anton.jpg', href: 'https://t.me/happinessguy' },
+    { id: 'bot',   parent: 'vopros', label: 'Боту про зубы и отношения', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
     { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, href: 'https://t.me/psy_teeth' }
   ];
   // Эфиры: от свежего к старому. Обложка — превью видео из поста (assets/img/efir-<номер поста>.jpg),
@@ -361,6 +361,21 @@
     kids.forEach(function (k, i) {
       var a = angles[i];
       var x = cx2 + Math.cos(a) * rx, y = cy2 + Math.sin(a) * ry;
+      // подпись под кружком не должна заходить под центральный круг (с запасом на покачивание):
+      // если заходит — отодвигаем кружок от центра
+      var lw = mobile ? 56 : 80, lh = (mobile ? 15 : 17) * Math.min(4, Math.ceil(k.label.length / (mobile ? 15 : 22)));
+      var ux = x - cx2, uy = y - cy2, ul = Math.hypot(ux, uy) || 1;
+      ux /= ul; uy /= ul;
+      for (var step = 0; step < 40; step++) {
+        var ltop = y + leafR + 4, bot = ltop + lh, lx = x - lw, rx2 = x + lw;
+        var nx = Math.max(lx, Math.min(cx2, rx2)), ny = Math.max(ltop, Math.min(cy2, bot));
+        var clear = Math.hypot(nx - cx2, ny - cy2) > Rc + 14 && Math.hypot(x - cx2, y - cy2) > Rc + leafR + 14;
+        if (clear) break;
+        var nx2 = x + ux * 6;
+        if (nx2 > leafR + 8 && nx2 < W - leafR - 8) x = nx2;
+        y += (uy || 1) * 6;
+      }
+      if (mobile) stageH = Math.max(stageH, y + leafR + lh + 70);
       set(k.id, x, y, leafR, 1, 'ring', 'b');
       childrenOf(k.id).forEach(function (s) {
         var sr = leafR * (mobile ? 0.7 : 0.62);
