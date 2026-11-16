@@ -43,4 +43,6 @@
 Быстрая проверка путей: ни одного `src="/` или `href="/` (кроме `//`) в html-файлах.
 
 ## Публикация
+Перед пушем, если менялись `graph.css` или `graph.js`, увеличить номер версии в `index.html` (`graph.css?v=N`, `graph.js?v=N`): иначе телефоны показывают старые файлы из кэша (Pages кэширует на 10 минут). Пользователю давать ссылку с тем же `?v=N`.
+
 Commit + `git push origin main` → GitHub Pages пересобирается сам за ~1 минуту (Pages включает пользователь: Settings → Pages → Deploy from branch → `main` / root).
