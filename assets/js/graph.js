@@ -221,7 +221,7 @@
       // сателлиты симметрично по кругу; полшага от линии к центру, чтобы не садиться на неё
       var toCenter = Math.atan2(cy - hy, cx - hx);
       var big = id === 'uslugi' || id === 'vopros';
-      var labelled = !mobile && big;
+      var labelled = false;   // на главной у вторичных сателлитов подписей нет (только круги/иконки)
       var ask = id === 'vopros';   // у «Задать вопрос» сателлиты крупнее, с иконками внутри
       var lr = mobile ? (ask ? 10 : big ? 5.5 : 4.5) : (ask ? 20 : big ? 14 : 7);
       var dist = hubR + (mobile ? (ask ? 20 : big ? 16 : 12) : (ask ? 46 : big ? 40 : 26));
