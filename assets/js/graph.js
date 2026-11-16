@@ -279,7 +279,7 @@
     var cx2, cy2, rx, ry, leafR, Rc, stageH = H;
     if (mobile) {
       leafR = n > 6 ? 30 : 40;
-      var top = 132;                       // ниже молекулы и подписи «на главную»
+      var top = 150;                       // ниже молекулы и подписи «на главную»
       ry = Math.max(200, n * 31, (H - top - 2 * leafR - 70) / 2);
       rx = W / 2 - 62;
       cx2 = W / 2; cy2 = top + leafR + ry;
@@ -295,17 +295,18 @@
 
     // молекула: на компьютере — в разрыве кольца листьев со стороны своего угла (ближе к центру, заметно);
     // на телефоне — сверху, над кольцом
-    var tr = mobile ? 30 : 44, sr = mobile ? 14 : 18, sd = mobile ? 46 : 66;
+    var tr = mobile ? 30 : 44, sr = mobile ? 14 : 18, sd = mobile ? 60 : 92;
     var mx, my, molA = Math.atan2(c[1], c[0]);
-    if (mobile) { mx = c[0] < 0 ? 62 : W - 62; my = 74; }
+    if (mobile) { mx = c[0] < 0 ? 80 : W - 80; my = 82; }
     else { mx = cx2 + Math.cos(molA) * rx; my = cy2 + Math.sin(molA) * ry; }
-    set('psy', mx, my, tr, 1, 'mini', !mobile && c[1] > 0 ? 't' : '');   // подпись над зубиком в нижних углах
+    // подпись «на главную»: там, где нет сателлитов (на компьютере в верхних углах — над зубиком)
+    set('psy', mx, my, tr, 1, 'mini', !mobile && c[1] < 0 ? 't' : '');
     var others = ['uslugi', 'blog', 'efiry', 'vopros'].filter(function (h) { return h !== id; });
-    // сателлиты молекулы — веером наружу, от центра
-    var away = Math.atan2(my - cy2, mx - cx2);
-    if (mobile) away = Math.atan2(-1, -c[0] * 1.2);   // на телефоне — вверх и к середине, подпись снизу свободна
+    // сателлиты молекулы — симметрично с трёх сторон (через 120°), с просветом от зубика;
+    // ни один не садится на линию к центру и на подпись
+    var toC = Math.atan2(cy2 - my, cx2 - mx);
     others.forEach(function (h, i) {
-      var step = mobile ? 0.95 : 1.05, a = away - step + i * step;
+      var a = mobile ? -Math.PI / 2 + i * 2 * Math.PI / 3 : toC + Math.PI / 3 + i * 2 * Math.PI / 3;
       set(h, mx + Math.cos(a) * sd, my + Math.sin(a) * sd, sr, 1, 'mini');
       LEAVES.forEach(function (l) {
         if (topHub(l) === h) set(l.id, mx + Math.cos(a) * sd, my + Math.sin(a) * sd, 0, 0, 'dot');
