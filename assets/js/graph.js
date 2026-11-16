@@ -69,6 +69,24 @@
     { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, detail: 'd-chat' },   // сначала окно про доступ по заявкам
     { id: 'faq1', parent: 'chat', sub: true, at: [[9, 11], [1, 3]], label: 'Пример', emoji: '❓', detail: 'd-faq1' }   // пример вопроса из чата
   ];
+  // ВРЕМЕННО: варианты расположения маленьких кружков (?sub=1|2|3), выбираем с пользователем
+  //  1 — Зубное кунг-фу 9–11, Пример 1–3
+  //  2 — Зубное кунг-фу 1–3, Пример 9–11
+  //  3 — как 1, плюс «В чате» переставлен в кольце «Задать вопрос» (не сверху)
+  var SUBV = (location.search.match(/[?&]sub=([123])/) || [])[1] || '1';
+  (function () {
+    var kf = LEAVES.filter(function (l) { return l.id === 'kungfu'; })[0];
+    var fq = LEAVES.filter(function (l) { return l.id === 'faq1'; })[0];
+    if (SUBV === '2') { kf.at = [[1, 3], [9, 11]]; fq.at = [[9, 11], [1, 3]]; }
+    else { kf.at = [[9, 11], [1, 3]]; fq.at = [[1, 3], [9, 11]]; }
+    if (SUBV === '3') {   // «В чате» — вторым по кругу, а не последним
+      var i = LEAVES.findIndex(function (l) { return l.id === 'chat'; });
+      var chat = LEAVES.splice(i, 1)[0];
+      var j = LEAVES.findIndex(function (l) { return l.id === 'admin'; });
+      LEAVES.splice(j + 1, 0, chat);
+    }
+  })();
+
   // Эфиры: от свежего к старому. Обложка — превью видео из поста (assets/img/efir-<номер поста>.jpg),
   // текст в модалке — блок #d-e<N> в index.html (саммари + ссылка на пост). Пустые места — заглушки.
   var EFIRS = [
@@ -268,7 +286,9 @@
         set(k.id, x, y, k.sun ? lr * (mobile ? 2.1 : 1.7) : lr, 1, 'dot', labelled ? side : '');   // бесплатная диагностика (зубик) — заметно крупнее
         childrenOf(k.id).forEach(function (s) {
           var off = lr + (labelled ? 26 : 10);
-          set(s.id, x + Math.cos(a) * off, y + Math.sin(a) * off, lr * 0.6, 1, 'dot', labelled ? side : '');
+          // на главной — по тому же циферблату, что и в разделе (середина первого диапазона)
+          var sa = s.at ? ((s.at[0][0] + s.at[0][1]) / 2 / 12) * 2 * Math.PI - Math.PI / 2 : a;
+          set(s.id, x + Math.cos(sa) * off, y + Math.sin(sa) * off, lr * 0.6, 1, 'dot', labelled ? side : '');
         });
       });
     });
