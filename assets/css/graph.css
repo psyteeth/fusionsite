@@ -124,7 +124,7 @@ body[data-active="focus"] .node--hub[data-id="psy"]{cursor:pointer}
 .node--hub[data-id="psy"].m-full .v-full{padding:0 calc(var(--r) * .17px)}
 /* шрифт считается от размера самого круга (container query), чтобы текст влезал при любом размере */
 .node--hub[data-id="psy"].m-full .disc{container-type:size}
-.node--hub[data-id="psy"].m-full .v-full .h{color:#fff;font-size:clamp(13px,8.6cqw,30px);hyphens:manual;overflow-wrap:normal}
+.node--hub[data-id="psy"].m-full .v-full .h{color:#fff;font-size:clamp(14px,9.1cqw,31px);hyphens:manual;overflow-wrap:normal}
 .node--hub[data-id="psy"].m-full .v-full .d{color:rgba(255,255,255,.86);font-size:clamp(9.5px,4.5cqw,17px)}
 /* маленький круг — только заголовок, полный текст виден по клику (круг увеличивается) */
 @container (max-width:205px){ .node--hub[data-id="psy"] .v-full .d{display:none} }
@@ -134,10 +134,10 @@ body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full .d{font-size:
 /* Главная: в центральном круге только заголовок (чуть выше центра) и палец-«клик» в нижней трети; полный текст — по клику */
 .tap{display:none}
 body[data-active="psy"] .node--hub[data-id="psy"] .v-full .d{display:none}
-body[data-active="psy"] .node--hub[data-id="psy"] .v-full{padding-bottom:12cqw}
+body[data-active="psy"] .node--hub[data-id="psy"] .v-full{padding-bottom:10cqw}
 body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:absolute;left:0;right:0;bottom:15%;
   margin:0 auto;width:clamp(28px,19cqw,46px);color:#fff}
-.tap svg{display:block;width:100%;height:auto;overflow:visible}
+.tap svg{display:block;width:100%;height:auto;overflow:visible;transform:translateX(8%)} /* оптическая коррекция: указательный палец смещён влево в рисунке */
 .tap .hand{transform-origin:50% 60%;animation:tap-press 2.4s ease-in-out infinite}
 .tap .rays{animation:tap-rays 2.4s ease-in-out infinite}
 @keyframes tap-press{0%,55%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(-.6px,-.6px) scale(.9)}}
