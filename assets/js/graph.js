@@ -4,6 +4,8 @@
 
   var IMG = './assets/img/';
   var TOOTH = IMG + '66623166-icons8-tooth-100.png';
+  // подсказка «нажми» в центральном круге на главной
+  var ICON_TAP = '<svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10.5l13 6-5.6 1.6L17.8 24z" fill="currentColor"/><path class="ring" d="M6.2 13.5a7 7 0 1 1 9.8-7.6"/></svg>';
   // иконки для свёрнутых разделов (молекула)
   var ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
   var ICON_DOC = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg>';
@@ -13,7 +15,7 @@
   var HUBS = [
     { id: 'psy', hash: '', title: 'Психостоматология №1', mini: '', icon: TOOTH,
       desc: 'с 2020 меняем представление о работе с зубами<br><br>работаем с зубами через отношения, а с отношениями - через зубы',
-      draft: true },
+      draft: true, tap: true },
     { id: 'uslugi', hash: 'uslugi', title: 'Услуги', mini: '$',
       desc: 'Просто начни с бесплатной диагностики',
       btn: { text: 'Записаться', href: 'https://t.me/happinessguy' } },
@@ -98,6 +100,7 @@
         b.addEventListener('click', function (ev) { ev.stopPropagation(); });
         full.appendChild(b);
       }
+      if (def.tap) full.appendChild(el('div', 'tap', ICON_TAP));
       disc.appendChild(full);
       disc.appendChild(el('div', 'v-mid', def.title));
       var mini = el('div', 'v-mini');
@@ -184,11 +187,8 @@
     });
   }
 
-  // Размер центрального круга на главной: [доля от min(ширина, высота) на компьютере, доля ширины на телефоне].
-  // Временно: ?size=1…5 для сравнения вариантов (страница compare.html).
-  var PSY_SIZES = { '0': [0.19, 0.31], '1': [0.165, 0.29], '2': [0.15, 0.27], '3': [0.135, 0.25], '4': [0.12, 0.23], '5': [0.105, 0.21] };
-  var sm = /[?&]size=(\d)/.exec(location.search);
-  var PSY_SIZE = PSY_SIZES[sm && PSY_SIZES[sm[1]] ? sm[1] : '0'];
+  // Размер центрального круга на главной: [доля от min(ширина, высота) на компьютере, доля ширины на телефоне]
+  var PSY_SIZE = [0.135, 0.25];
 
   function layoutHome() {
     var cx = W / 2, cy = H / 2 + (mobile ? 10 : 15);

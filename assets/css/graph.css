@@ -130,3 +130,11 @@ body[data-active="focus"] .node--hub[data-id="psy"]{cursor:pointer}
 @container (max-width:205px){ .node--hub[data-id="psy"] .v-full .d{display:none} }
 .node--hub[data-id="psy"].m-full .v-full .d.draft::after{color:#ff9a85}
 body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full .d{font-size:clamp(12px,3.9cqw,19px)}
+
+/* Главная: в центральном круге только заголовок и подсказка «нажми»; полный текст — по клику */
+.tap{display:none}
+body[data-active="psy"] .node--hub[data-id="psy"] .v-full .d{display:none}
+body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;width:clamp(26px,15cqw,40px);color:#fff;
+  margin-top:4px;animation:tap 2.2s ease-in-out infinite}
+@keyframes tap{0%,60%,100%{transform:translate(0,0) scale(1);opacity:.85}30%{transform:translate(-2px,-2px) scale(.88);opacity:1}}
+@media (prefers-reduced-motion:reduce){ .tap{animation:none !important} }
