@@ -309,8 +309,9 @@
       Rc = Math.min(W * 0.24, rx - leafR - 12);
       stageH = cy2 + ry + leafR + 60;
     } else {
-      cx2 = W / 2; cy2 = H / 2;
-      ry = H / 2 - 64 - 52;
+      // кольцо чуть выше центра и ниже край — чтобы плашка psyteeth.ru внизу не закрывала подписи
+      cx2 = W / 2; cy2 = H / 2 - 18;
+      ry = H / 2 - 64 - 74;
       rx = Math.min(W / 2 - 150, ry * 1.55);
       leafR = Math.max(30, Math.min(56, (2 * Math.PI * ry / n) * 0.3));
       Rc = Math.min(m * 0.21, ry - leafR - 24);
