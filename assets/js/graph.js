@@ -74,7 +74,8 @@
     { title: 'Стабилизатор или катализатор', img: 'efir-772.jpg' },
     { title: 'Расстройство', img: 'efir-767.jpg' },
     { title: 'Очковтирательство', img: 'efir-732.jpg' },
-    { title: 'Слова', img: 'efir-718.jpg' }
+    { title: 'Слова', img: 'efir-718.jpg' },
+    { title: 'Я строю себя из других', img: 'efir-692.jpg' }
   ];
   for (var e = 1; e <= 9; e++) {
     var ef = EFIRS[e - 1];
