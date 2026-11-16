@@ -385,12 +385,21 @@
       else if (y + leafR + 4 + lh > H - 62) y = H - 62 - lh - leafR - 4;   // над плашкой psyteeth.ru внизу
       set(k.id, x, y, leafR, 1, 'ring', 'b');
       childrenOf(k.id).forEach(function (s) {
-        var sr = leafR * (mobile ? 0.7 : 0.62);
-        var dir = Math.cos(a) >= 0 ? 1 : -1;
-        var sx = x + dir * (leafR + (mobile ? 44 : 62));
-        sx = Math.max(sr + 50, Math.min(W - sr - 50, sx));
-        var sy = mobile ? y - leafR - sr - 34 : y - 30;
-        if (mobile && Math.abs(sx - x) < leafR + sr) sx = x - dir * (leafR + sr + 30);
+        var sr = leafR * 0.5;   // сателлит сателлита — не больше половины своего «родителя»
+        // ставим с внешней стороны от «родителя» (дальше от центрального круга)
+        var d = leafR + sr + (mobile ? 30 : 40);
+        var sx = x + ux * d, sy = y + uy * d;
+        var lim = mobile ? sr + 46 : sr + 70;
+        if (sx < lim || sx > W - lim) {   // упёрлись в край экрана — ставим над «родителем»
+          sx = Math.max(lim, Math.min(W - lim, x));
+          sy = y - leafR - sr - (mobile ? 30 : 40);
+        }
+        if (sy < sr + 24) {   // упёрлись в верх экрана — ставим сбоку, с внешней стороны
+          var side = ux >= 0 ? 1 : -1;
+          sx = x + side * (leafR + sr + (mobile ? 30 : 46));
+          if (sx < lim || sx > W - lim) sx = x - side * (leafR + sr + (mobile ? 30 : 46));
+          sy = y - leafR * 0.3;
+        }
         set(s.id, sx, sy, sr, 1, 'ring', 'b');
       });
     });
