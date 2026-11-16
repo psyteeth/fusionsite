@@ -205,15 +205,11 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
 .node--hub.m-full{z-index:5}
 .node--hub[data-id="psy"].m-full{z-index:2}
 
-/* Подпись над кружком (верхняя часть кольца) */
-.node--leaf.lab-t .lab{left:-80px;width:160px;text-align:center;bottom:calc(var(--r) * 1px + 8px);font-size:13.5px}
-/* Вариант с плашкой: подпись на полупрозрачном фоне поверх линии */
-.labv-plate .node--leaf.lab-b .lab,.labv-plate .node--leaf.lab-t .lab{left:0;width:max-content;max-width:160px;transform:translateX(-50%);
+/* Подписи сателлитов в разделе — на полупрозрачной плашке, прикрывают линию связи */
+.node--leaf.lab-b .lab{left:0;width:max-content;max-width:160px;transform:translateX(-50%);
   background:rgba(246,244,239,.88);padding:2px 7px;border-radius:9px}
 @media (max-width:699px){
-  .node--leaf.lab-t .lab{left:-58px;width:116px;font-size:11.5px;bottom:calc(var(--r) * 1px + 5px);
-    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
-  .labv-plate .node--leaf.lab-b .lab,.labv-plate .node--leaf.lab-t .lab{left:0;width:max-content;max-width:124px}
+  .node--leaf.lab-b .lab{left:0;width:max-content;max-width:124px}
   /* Эфиры: заголовок крупнее, подпись про канал пониже */
   .node--hub[data-id="efiry"].m-full .v-full{gap:5px;padding:0 14px}
   .node--hub[data-id="efiry"].m-full .v-full .h{font-size:21px}
