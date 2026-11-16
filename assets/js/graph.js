@@ -206,10 +206,11 @@
   function layoutHome() {
     var cx = W / 2, cy = H / 2 + (mobile ? 10 : 15);
     var m = Math.min(W, H);
-    var R = mobile ? W * PSY_SIZE[1] : m * PSY_SIZE[0];
     var hubR = mobile ? W * 0.115 : m * 0.072;
     var dx = mobile ? W * 0.3 : Math.min(W * 0.26, 360);
     var dy = mobile ? H * 0.28 : H * 0.28;
+    // на компьютере круг растёт вместе с расстоянием до разделов (широкое окно — круг больше, без пустоты вокруг)
+    var R = mobile ? W * PSY_SIZE[1] : Math.max(m * PSY_SIZE[0], Math.hypot(dx, dy) * 0.33);
     set('psy', cx, cy, R, 1, 'full');
 
     ['uslugi', 'blog', 'efiry', 'vopros'].forEach(function (id) {
