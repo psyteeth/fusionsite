@@ -38,7 +38,7 @@
   var HOME_POS = { uslugi: [-1, -1], blog: [1, -1], efiry: [1, 1], vopros: [-1, 1] };
 
   var LEAVES = [
-    { id: 'diag',   parent: 'uslugi', label: 'Бесплатная диагностика', inner: '0 ₽', detail: 'd-diag', sun: true },
+    { id: 'diag',   parent: 'uslugi', label: 'Бесплатная диагностика', inner: '0 ₽', detail: 'd-diag', sun: true, dotIcon: TOOTH },   // на главной в жёлтом кружке — зубик
     { id: 'cons',   parent: 'uslugi', label: 'Первичная консультация', inner: '2 500 ₽', detail: 'd-cons' },
     { id: 'vip',    parent: 'uslugi', label: 'VIP-консультация', inner: '30 000 ₽', detail: 'd-vip' },
     { id: 'group',  parent: 'uslugi', label: 'Групповая работа', inner: '15 000 ₽<br>/ мес', detail: 'd-group' },
@@ -57,7 +57,7 @@
     { id: 'a10', parent: 'blog', label: 'Инструкция по эксплуатации "БЕЗЗУБЫХ".', href: './tpost/havefun/', img: '65333466-leary_circumplex_lig.png' },
     { id: 'a11', parent: 'blog', label: 'Закрой свой рот! Ты слишком ...', href: './tpost/shutup/', img: '63646561-21____.jpg' },
 
-    { id: 'admin', parent: 'vopros', label: 'Администратору', ava: 'tg-maria.jpg', href: 'https://t.me/psyteeth' },
+    { id: 'admin', parent: 'vopros', label: 'Администратору', emoji: '👩🏼', href: 'https://t.me/psyteeth' },
     { id: 'anton', parent: 'vopros', label: 'Антону Казакову, создателю', ava: 'tg-anton.jpg', href: 'https://t.me/happinessguy' },
     { id: 'bot',   parent: 'vopros', label: 'Драма Киллер Боту — про отношения и зубы', svg: AV_BOT, href: 'https://t.me/dramakiller_bot' },
     { id: 'chat',  parent: 'vopros', label: 'В чате психостоматологии', svg: AV_TG, href: 'https://t.me/psy_teeth' }
@@ -127,9 +127,11 @@
       root.title = def.label;
       var d2 = el('span', 'disc');
       if (def.img) d2.style.backgroundImage = "url('" + IMG + def.img + "')";
+      else if (def.emoji) d2.appendChild(el('span', 'emo', def.emoji));
       else if (def.ava) { var av = el('img', 'ava'); av.src = IMG + def.ava; av.alt = ''; d2.appendChild(av); }
       else if (def.svg) d2.appendChild(el('span', 'ico', def.svg));
       else d2.appendChild(el('span', 'in' + ((def.inner || '').length <= 2 ? ' in--big' : ''), def.inner || ''));
+      if (def.dotIcon) { var di = el('img', 'dot-ico'); di.src = def.dotIcon; di.alt = ''; d2.appendChild(di); }
       root.appendChild(d2);
       root.appendChild(el('span', 'lab', def.label));
       if (def.detail) root.addEventListener('click', function () { openDetail(def.detail); });
