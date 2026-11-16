@@ -318,7 +318,8 @@
       var roomy = HUBS.some(function (h) { return h.id === id && h.foot; });
       rx = W / 2 - (roomy ? 56 : 62);
       cx2 = W / 2; cy2 = top + leafR + ry;
-      Rc = roomy ? Math.min(W * 0.27, rx - leafR - 10) : Math.min(W * 0.24, rx - leafR - 12);
+      // круг поменьше, чтобы подписи боковых сателлитов не заходили под него
+      Rc = roomy ? Math.min(W * 0.25, rx - leafR - 10) : Math.min(W * 0.22, rx - leafR - 12);
       stageH = cy2 + ry + leafR + 60;
     } else {
       // кольцо чуть выше центра и ниже край — чтобы плашка psyteeth.ru внизу не закрывала подписи
