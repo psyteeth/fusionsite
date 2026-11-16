@@ -26,7 +26,7 @@
       draft: true, tap: true },
     { id: 'uslugi', hash: 'uslugi', title: 'Услуги', mini: '$',
       desc: 'Просто начни с бесплатной диагностики',
-      btn: { text: 'Записаться', href: 'https://t.me/happinessguy' } },
+      btn: { text: 'Записаться', href: 'https://t.me/psyteeth' } },   // запись — через администратора Марию
     { id: 'blog', hash: 'blog', title: 'Блог', mini: 'Б', svg: ICON_DOC,
       desc: '11 статей на темы от нейрофизиологии отношений до третьей сепарации, а в общем — о том, как зубы отзываются на то, что происходит между людьми' },
     { id: 'efiry', hash: 'efiry', title: 'Эфиры', mini: 'Э', svg: ICON_PLAY,
