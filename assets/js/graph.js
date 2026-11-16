@@ -188,7 +188,7 @@
     var cx = W / 2, cy = H / 2 + (mobile ? 10 : 15);
     var m = Math.min(W, H);
     var R = mobile ? W * 0.31 : m * 0.19;
-    var hubR = mobile ? W * 0.13 : m * 0.085;
+    var hubR = mobile ? W * 0.115 : m * 0.072;
     var dx = mobile ? W * 0.3 : Math.min(W * 0.26, 360);
     var dy = mobile ? H * 0.28 : H * 0.28;
     set('psy', cx, cy, R, 1, 'full');
