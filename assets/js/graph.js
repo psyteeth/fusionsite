@@ -199,6 +199,13 @@
     return out;
   }
 
+  // ВРЕМЕННО: варианты подписей сателлитов внутри раздела (?lab=a|b|c), выбираем с пользователем
+  //  a — подпись с внешней стороны (сверху у верхних, снизу у нижних), не пересекает линию к центру
+  //  b — подпись снизу, как раньше, на полупрозрачной плашке поверх линии
+  //  c — a + b
+  var LABV = (location.search.match(/[?&]lab=([abc])/) || [])[1] || 'a';
+  document.documentElement.className += ' labv-' + LABV + (LABV !== 'a' ? ' labv-plate' : '');
+
   // ---------- Раскладка ----------
   var active = 'psy';
   var W = 0, H = 0, mobile = false;
@@ -360,7 +367,8 @@
     kids.forEach(function (k, i) {
       var a = angles[i];
       var x = cx2 + Math.cos(a) * rx, y = cy2 + Math.sin(a) * ry;
-      set(k.id, x, y, leafR, 1, 'ring', 'b');
+      var outer = LABV !== 'b' && Math.sin(a) < -0.15;   // верхняя часть кольца — подпись над кружком
+      set(k.id, x, y, leafR, 1, 'ring', outer ? 't' : 'b');
       childrenOf(k.id).forEach(function (s) {
         var sr = leafR * (mobile ? 0.7 : 0.62);
         var dir = Math.cos(a) >= 0 ? 1 : -1;
