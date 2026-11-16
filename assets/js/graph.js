@@ -49,7 +49,7 @@
     { id: 'cons',   parent: 'uslugi', label: 'Первичная консультация', inner: '2 500 ₽', detail: 'd-cons' },
     { id: 'group',  parent: 'uslugi', label: 'Работа с зубами\nв группе', inner: '<span class="pf"><b>15 000 ₽</b><span>месяц</span></span>', detail: 'd-group' },
     { id: 'clinic', parent: 'uslugi', label: 'Стоматологам', emoji: '🧑‍⚕️', detail: 'd-clinic' },
-    { id: 'kungfu', parent: 'group', sub: true, at: [[9, 11], [1, 3]], label: 'Зубное кунг-фу', emoji: '🥋', detail: 'd-kungfu' },
+    { id: 'kungfu', parent: 'group', sub: true, at: [[9, 11], [1, 3]], label: 'Зубное\nкунг-фу', emoji: '🥋', detail: 'd-kungfu' },
 
     { id: 'a1', parent: 'blog', label: 'Как с зубами, так и с людьми', detail: 'd-a1', img: '63343139-pexels-karolina-grab.jpg' },
     { id: 'a2', parent: 'blog', label: 'Нейрофизиология отношений', detail: 'd-a2', img: '33373232-robina-weermeijer-3K.jpg' },
