@@ -183,3 +183,20 @@ body[data-active="psy"] .node--hub[data-id="psy"] .tap{display:block;position:ab
 .modal .meta{color:var(--muted);font-size:14px;margin-top:-8px}
 .modal .btn-tg{display:inline-block;margin-top:6px;padding:11px 22px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font-weight:700}
 .modal .btn-tg:hover{filter:brightness(1.08)}
+
+/* Подпись-ссылка внизу большого круга раздела (Эфиры → Телеграм-канал) */
+.hub-foot{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:calc(var(--r) * .03px);
+  text-decoration:none;color:var(--muted);font-size:clamp(11px,calc(var(--r) * .07px),14px);line-height:1.3}
+.hub-foot__i{display:block;width:clamp(26px,calc(var(--r) * .2px),38px);height:clamp(26px,calc(var(--r) * .2px),38px)}
+.hub-foot__i svg{display:block;width:100%;height:100%}
+.hub-foot:hover{color:var(--accent)}
+.hub-foot:hover .hub-foot__i{transform:scale(1.08)}
+/* Текст раздела под картой — только на телефоне; в самом круге там остаются название и самолётик */
+.hub-note{display:none}
+@media (max-width:699px){
+  .node--hub.has-note.m-full .v-full .d,.node--hub.has-note.m-full .hub-foot__t{display:none}
+  .js .hub-note:not([hidden]){display:block;max-width:520px;margin:0 auto;padding:0 22px 40px;text-align:center}
+  .hub-note__d{font-size:15px;line-height:1.45;margin:0 0 14px;color:#333}
+  .hub-note .hub-foot{font-size:14px}
+  .hub-note .hub-foot__i{width:40px;height:40px}
+}

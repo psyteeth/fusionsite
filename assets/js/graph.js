@@ -31,8 +31,8 @@
       desc: '11 статей на темы от нейрофизиологии отношений до сепарации и нарциссических манипуляций',
       draft: true },
     { id: 'efiry', hash: 'efiry', title: 'Эфиры', mini: 'Э', svg: ICON_PLAY,
-      desc: 'Эфиры на темы от… до…, но в общем на тему…',
-      draft: true },
+      desc: 'Эфиры на темы от «медалек за хорошесть» и стыда за пустой кошелёк до запрета на победу и слов, которые разрушают изнутри, но в общем о том, как перестать держать лицо и подстраиваться под других — чтобы отношения стали честнее, а зубам стало легче.',
+      foot: { text: 'Больше эфиров и подкастов психостоматологии в Телеграм-канале', href: 'https://t.me/psy_teeth_official' } },
     { id: 'vopros', hash: 'vopros', title: 'Задать вопрос', mini: '?',
       desc: 'Кому задать вопрос?' }
   ];
@@ -109,7 +109,7 @@
       phase: Math.random() * Math.PI * 2, amp: 0 };
     var root;
     if (kind === 'hub') {
-      root = el('div', 'node node--hub');
+      root = el('div', 'node node--hub' + (def.foot ? ' has-note' : ''));
       root.setAttribute('role', 'button');
       root.tabIndex = 0;
       root.setAttribute('aria-label', def.title);
@@ -122,6 +122,14 @@
         b.href = def.btn.href; b.target = '_blank'; b.rel = 'noopener';
         b.addEventListener('click', function (ev) { ev.stopPropagation(); });
         full.appendChild(b);
+      }
+      if (def.foot) {
+        var f = el('a', 'hub-foot');
+        f.href = def.foot.href; f.target = '_blank'; f.rel = 'noopener';
+        f.appendChild(el('span', 'hub-foot__t', def.foot.text));
+        f.appendChild(el('span', 'hub-foot__i', AV_TG));
+        f.addEventListener('click', function (ev) { ev.stopPropagation(); });
+        full.appendChild(f);
       }
       if (def.tap) full.appendChild(el('div', 'tap', ICON_TAP));
       disc.appendChild(full);
@@ -428,9 +436,25 @@
     if (hub.hash) location.hash = hub.hash;
     else { history.pushState(null, '', hash); apply(); }
   }
+  // На телефоне длинный текст раздела и ссылка не влезают в круг — показываем их под картой
+  var note = document.getElementById('hub-note');
+  function fillNote() {
+    if (!note) return;
+    var hub = HUBS.filter(function (h) { return h.id === active && h.foot; })[0];
+    if (!hub) { note.innerHTML = ''; note.hidden = true; return; }
+    note.innerHTML = '';
+    note.appendChild(el('p', 'hub-note__d', hub.desc));
+    var a = el('a', 'hub-foot');
+    a.href = hub.foot.href; a.target = '_blank'; a.rel = 'noopener';
+    a.appendChild(el('span', 'hub-foot__t', hub.foot.text));
+    a.appendChild(el('span', 'hub-foot__i', AV_TG));
+    note.appendChild(a);
+    note.hidden = false;
+  }
   function apply() {
     active = idFromHash();
     document.body.dataset.active = active;
+    fillNote();
     layout();
     window.scrollTo(0, 0);
   }
@@ -453,6 +477,7 @@
   // ---------- Старт ----------
   active = idFromHash();
   document.body.dataset.active = active;
+  fillNote();
   layout();
   order.forEach(function (n) { n.x = n.t.x; n.y = n.t.y; n.r = n.t.r; n.op = n.t.op; });
   requestAnimationFrame(frame);
