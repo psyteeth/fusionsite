@@ -270,3 +270,8 @@ button.cta{border:0;cursor:pointer;font-family:inherit}
   .zkf__tile{grid-row:auto;grid-template-rows:none}
   .zkf__extra:empty{display:none}
 }
+/* «Зубное кунг-фу»: кимоно на тёмной графитовой плашке, к краю краснеет */
+.node--leaf[data-id="kungfu"] .disc{
+  background:radial-gradient(circle at 50% 45%,rgba(58,52,56,.82) 0%,rgba(58,52,56,.78) 52%,rgba(196,40,30,.62) 100%) !important;
+  border-color:rgba(196,40,30,.75);box-shadow:0 0 calc(var(--r) * .24px) rgba(196,40,30,.35)}
+.node--leaf[data-id="kungfu"]:hover .disc{border-color:rgba(196,40,30,.95);box-shadow:0 0 calc(var(--r) * .34px) rgba(196,40,30,.5)}

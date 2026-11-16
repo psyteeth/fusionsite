@@ -8,14 +8,6 @@
   var ICON_TOOTH = '<svg viewBox="0 0 24 24" fill="#fff" stroke="#1b1b1b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<path d="M12 5.5c-1.074 -.586 -2.583 -1.5 -4 -1.5c-2.1 0 -4 1.247 -4 5c0 4.899 1.056 8.41 2.671 10.537c.573 .756 1.97 .521 2.567 -.236c.398 -.505 .819 -1.439 1.262 -2.801c.292 -.771 .892 -1.504 1.5 -1.5c.602 0 1.21 .737 1.5 1.5c.443 1.362 .864 2.295 1.262 2.8c.597 .759 2 .993 2.567 .237c1.615 -2.127 2.671 -5.637 2.671 -10.537c0 -3.74 -1.908 -5 -4 -5c-1.423 0 -2.92 .911 -4 1.5z"/>' +
     '<path d="M12 5.5l3 1.5" fill="none"/></svg>';
-  // щит и меч — значок «Зубного кунг-фу» (путь героя)
-  var ICON_SHIELD = '<svg viewBox="0 0 24 24" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round">' +
-    '<path d="M5.72 7.28L7.28 5.72L20.28 18.72L21.8 21.8L18.72 20.28z" fill="#e3e8eb" stroke="#1b1b1b" stroke-width="1"/>' +
-    '<path d="M6.8 6.8L19.2 19.2" stroke="#9fb0b8" stroke-width=".6"/>' +
-    '<path d="M3.7 8.7L8.7 3.7" stroke="#1b1b1b" stroke-width="2.2"/><path d="M3.3 3.3L5.6 5.6" stroke="#ff5136" stroke-width="2.4"/>' +
-    '<circle cx="2.5" cy="2.5" r="1.2" fill="#ff5136" stroke="#1b1b1b" stroke-width=".8"/>' +
-    '<path d="M12.3 6.6l6 2.2v4c0 3.6-2.4 6-6 7.6c-3.6-1.6-6-4-6-7.6v-4z" fill="#00a1c9" stroke="#1b1b1b" stroke-width="1.5"/>' +
-    '<path d="M12.3 8.8l3.9 1.45v2.6c0 2.4-1.5 4-3.9 5.2c-2.4-1.2-3.9-2.8-3.9-5.2v-2.6z" fill="none" stroke="#fff" stroke-width=".9"/></svg>';
   // подсказка «нажми» в центральном круге на главной
   // палец с «кликом» (рисунок по мотивам Tabler Icons «hand-click», MIT)
   var ICON_TAP = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><g class="hand"><path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5"/><path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47"/></g><g class="rays"><path d="M5 3l-1 -1"/><path d="M4 7h-1"/><path d="M14 3l1 -1"/><path d="M15 6h1"/></g></svg>';
@@ -57,7 +49,7 @@
     { id: 'cons',   parent: 'uslugi', label: 'Первичная консультация', inner: '2 500 ₽', detail: 'd-cons' },
     { id: 'group',  parent: 'uslugi', label: 'Групповая работа', inner: '15 000 ₽<br>/ мес', detail: 'd-group' },
     { id: 'clinic', parent: 'uslugi', label: 'Стоматологам', emoji: '🧑‍⚕️', detail: 'd-clinic' },
-    { id: 'kungfu', parent: 'group', sub: true, at: [[9, 11], [1, 3]], label: 'Зубное кунг-фу', inner: '', svg: ICON_SHIELD, detail: 'd-kungfu' },
+    { id: 'kungfu', parent: 'group', sub: true, at: [[9, 11], [1, 3]], label: 'Зубное кунг-фу', emoji: '🥋', detail: 'd-kungfu' },
 
     { id: 'a1', parent: 'blog', label: 'Как с зубами, так и с людьми', detail: 'd-a1', img: '63343139-pexels-karolina-grab.jpg' },
     { id: 'a2', parent: 'blog', label: 'Нейрофизиология отношений', detail: 'd-a2', img: '33373232-robina-weermeijer-3K.jpg' },
