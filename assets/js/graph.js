@@ -253,7 +253,9 @@
     var dy = mobile ? H * 0.28 : H * 0.28;
     // на компьютере круг растёт вместе с расстоянием до разделов (широкое окно — круг больше, без пустоты вокруг)
     var R = mobile ? W * PSY_SIZE[1] : Math.max(m * PSY_SIZE[0], Math.hypot(dx, dy) * 0.33);
+    if (mobile && window.innerWidth > window.innerHeight) R = Math.min(R, H * 0.19);   // телефон боком: круг меньше, чтобы не касаться сателлитов
     set('psy', cx, cy, R, 1, 'full');
+    var homeSubs = [];
 
     ['uslugi', 'blog', 'efiry', 'vopros'].forEach(function (id) {
       var p = HOME_POS[id];
@@ -275,13 +277,30 @@
         var x = hx + Math.cos(a) * kd, y = hy + Math.sin(a) * kd;
         var side = Math.cos(a) < 0 ? 'l' : 'r';
         set(k.id, x, y, k.sun ? lr * (mobile ? 2.1 : 1.7) : lr, 1, 'dot', labelled ? side : '');   // бесплатная диагностика (зубик) — заметно крупнее
-        childrenOf(k.id).forEach(function (s) {
-          var off = lr + (labelled ? 26 : 10);
-          // на главной — по тому же циферблату, что и в разделе (середина первого диапазона)
-          var sa = s.at ? ((s.at[0][0] + s.at[0][1]) / 2 / 12) * 2 * Math.PI - Math.PI / 2 : a;
-          set(s.id, x + Math.cos(sa) * off, y + Math.sin(sa) * off, lr * 0.6, 1, 'dot', labelled ? side : '');
-        });
+        childrenOf(k.id).forEach(function (s) { homeSubs.push({ s: s, x: x, y: y, r: k.sun ? lr * (mobile ? 2.1 : 1.7) : lr, a: a, side: side }); });
       });
+    });
+    // сателлиты сателлитов — после всех кругов: с зазором от «родителя» и так, чтобы ни на что не налезать
+    homeSubs.forEach(function (h) {
+      var sr = h.r * 0.6, off = h.r + sr + (mobile ? 9 : 11);
+      var hours = [];
+      (h.s.at || []).forEach(function (rg) { for (var hr = rg[0]; hr <= rg[1] + 0.001; hr += 0.25) hours.push(hr); });
+      for (var hh = 0; hh < 12; hh += 0.5) hours.push(hh);   // запасные — по всему кругу
+      var best = null;
+      for (var i = 0; i < hours.length && !best; i++) {
+        var sa = (hours[i] / 12) * 2 * Math.PI - Math.PI / 2;
+        var sx = h.x + Math.cos(sa) * off, sy = h.y + Math.sin(sa) * off;
+        if (sx < sr + 4 || sx > W - sr - 4 || sy < sr + 4 || sy > H - sr - 4) continue;
+        var free = order.every(function (n) {
+          if (!n.t || n.t.op < 0.5 || n.t.r < 1 || n.id === h.s.id) return true;
+          if (n.kind === 'leaf' && n.def.sub) return true;
+          return Math.hypot(n.t.x - sx, n.t.y - sy) >= n.t.r + sr + 9;
+        }) && homeSubs.every(function (o) { return !o.t || o === h || Math.hypot(o.t.x - sx, o.t.y - sy) >= o.t.r + sr + 9; });
+        if (free) best = [sx, sy];
+      }
+      if (!best) { var sa2 = h.a; best = [h.x + Math.cos(sa2) * off, h.y + Math.sin(sa2) * off]; }
+      h.t = { x: best[0], y: best[1], r: sr };
+      set(h.s.id, best[0], best[1], sr, 1, 'dot', '');
     });
     return H;
   }
@@ -336,7 +355,8 @@
       // круг поменьше, чтобы подписи боковых сателлитов не заходили под него
       Rc = roomy ? Math.min(W * 0.25, rx - leafR - 10) : Math.min(W * 0.22, rx - leafR - 12);
       var rk = HUBS.filter(function (h) { return h.id === id; })[0];
-      if (roomy && n <= 5) Rc = W * (typeof rk.roomy === 'number' ? rk.roomy : 0.34);   // мало кружков (Задать вопрос) — круг крупнее, кружки отодвинутся ниже сами
+      if (roomy && n <= 5) Rc = W * (typeof rk.roomy === 'number' ? rk.roomy : 0.34);
+      if (window.innerWidth > window.innerHeight) Rc = Math.min(Rc, W * 0.22);   // телефон боком: центральный круг скромнее, сателлиты не налезают   // мало кружков (Задать вопрос) — круг крупнее, кружки отодвинутся ниже сами
       stageH = cy2 + ry + leafR + 60;
     } else {
       // кольцо чуть выше центра и ниже край — чтобы плашка psyteeth.ru внизу не закрывала подписи
@@ -781,6 +801,9 @@
   function closeModal() { if (modal.close) modal.close(); else modal.removeAttribute('open'); }
   modal.querySelector('.modal__close').addEventListener('click', closeModal);
   modal.addEventListener('click', function (ev) { if (ev.target === modal) closeModal(); });
+
+  // для проверки наложений (?debug=1): целевые позиции кругов
+  if (/[?&]debug=1/.test(location.search)) window.__psyNodes = function () { return order.map(function (n) { return { id: n.id, kind: n.kind, x: n.t.x, y: n.t.y, r: n.t.r, op: n.t.op }; }); };
 
   // ---------- Старт ----------
   active = idFromHash();
