@@ -280,3 +280,5 @@ button.cta{border:0;cursor:pointer;font-family:inherit}
 .node--leaf .pf{display:flex;flex-direction:column;align-items:center;line-height:1}
 .node--leaf .pf b{white-space:nowrap;font-size:1.12em}
 .node--leaf .pf span{font-size:max(10.5px,.9em);font-weight:600;margin-top:.14em}
+/* Психостоматология №1: кнопка только в раскрытом круге */
+body[data-active="psy"] .node--hub[data-id="psy"] .cta{display:none}
