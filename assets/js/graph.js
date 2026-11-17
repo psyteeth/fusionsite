@@ -21,11 +21,7 @@
   // ---------- Данные ----------
   // hub: разделы; leaf: сателлиты разделов; sub: сателлит сателлита
   var HUBS = [
-    { id: 'psy', hash: '', title: 'Психостоматология №1', mini: '', icon: TOOTH,
-      desc: 'Ты держишь мир в семье, помогаешь, терпишь и не показываешь, как тебе больно. А зубы ноют, крошатся и лечатся по кругу.' +
-            '<br><br>Психостоматология №1 с 2020 года работает с зубами через отношения: на диагностиках видно, как конкретный зуб откликается на конкретную историю с близкими.' +
-            '<br><br>Узнай, о чём говорят твои зубы, и что можно сделать, чтобы они перестали платить за других.',
-      btn: { text: 'Бесплатная диагностика', detail: 'd-diag' }, tap: true },
+    { id: 'psy', hash: '', title: 'Психостоматология №1', mini: '', icon: TOOTH, tap: true },   // раскрытый вид — блок PSYX ниже
     { id: 'uslugi', hash: 'uslugi', title: 'Услуги', mini: '$',
       desc: 'Если тебя что-то беспокоит с зубами, деснами, прикусом, кривизной, просто приходи на бесплатную диагностику',
       btn: { text: 'Записаться', detail: 'd-diag' }, roomy: 0.3 },   // кнопка открывает окно бесплатной диагностики (запись там — через Марию)
@@ -230,6 +226,7 @@
     else stageH = layoutSection(active);
 
     stage.style.height = stageH + 'px';
+    if (active === 'focus' && typeof layPsyx === 'function') setTimeout(layPsyx, 0);
     svg.setAttribute('width', W);
     svg.setAttribute('height', stageH);
     order.forEach(function (n) {
@@ -549,6 +546,121 @@
   var rt;
   window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(layout, 80); });
 
+  // ---------- Раскрытая «Психостоматология №1»: цитата, название + бегущая строка, описание, кнопка ----------
+  // Текст сверху и снизу повторяет форму круга (поплавки с вырезом по окружности); название и строка — ровно по центру.
+  var PSYX = {
+    quote: 'Ты держишь мир в семье, помогаешь, терпишь и не показываешь, как тебе тяжело и больно… А зубы ноют, портятся и лечатся по кругу…',
+    about: 'Мы с 2020 года работаем с зубами через отношения. На диагностиках видно, как конкретный зуб откликается на конкретную историю в отношениях, где человек рассказывает о себе одно, а его зубы — другое…',
+    btn: 'И что в итоге…', detail: 'd-example',
+    // цифры и темы недели берутся с дашборда; это — запас, если он не ответил
+    stats: 'https://psyteeth.github.io/schedule/data/stats.json',
+    topics: 'https://psyteeth.github.io/schedule/data/topics.json'
+  };
+  function plural(n, one, few, many) {
+    var a = Math.abs(n) % 100, b = a % 10;
+    if (a > 10 && a < 20) return many;
+    return b === 1 ? one : (b >= 2 && b <= 4 ? few : many);
+  }
+  function tickerItems(st, tp) {
+    st = st || { slots_total: 194, participants_active: 15, streams_per_week: 13, limbic_unload_30d: { hours: 51, minutes: 17 } };
+    var h = st.limbic_unload_30d.hours, mi = st.limbic_unload_30d.minutes;
+    var it = [
+      '<b>' + st.slots_total + '</b> ' + plural(st.slots_total, 'созвон', 'созвона', 'созвонов') + ' по 15 минут',
+      '<b>' + st.participants_active + '</b> ' + plural(st.participants_active, 'активный участник', 'активных участника', 'активных участников'),
+      '<b>' + st.streams_per_week + '</b> ' + plural(st.streams_per_week, 'эфир', 'эфира', 'эфиров') + ' в неделю',
+      '<b>' + h + ' ' + plural(h, 'час', 'часа', 'часов') + ' ' + mi + ' ' + plural(mi, 'минута', 'минуты', 'минут') + '</b> эмоциональной разгрузки за прошедшие 30 дней',
+      '<b>250</b> диагностик с февраля 2025 года',
+      '<em>«Из-за него мне…»</em> — плохо · больно · грустно · страшно'
+    ];
+    var t = tp && tp.items && tp.items[0];
+    it.push('<em>Тема недели:</em> «' + (t ? (t.short || t.text) : 'Спасаю близких от страхов, плачу сама') + '»');
+    var v = tp && tp.vector;
+    it.push('<em>Вектор недели:</em> от «' + (v ? v.from_short : 'держу лицо') + '» к «' + (v ? v.to_short : 'говорю, что чувствую') + '»');
+    return it.map(function (x) { return '<span>' + x + '</span><span class="dot">•</span>'; }).join('');
+  }
+  var psyx = (function () {
+    var disc = nodes.psy.disc;
+    var box = el('div', 'psyx');
+    box.innerHTML = '<div class="psyx__glow"></div><div class="psyx__glow"></div><div class="psyx__spot"></div>' +
+      '<div class="psyx__reg psyx__q"><div class="fl l"></div><div class="fl r"></div><div class="tx"></div></div>' +
+      '<div class="psyx__h">Психостоматология №1</div>' +
+      '<div class="psyx__tick"><div class="psyx__row"></div></div>' +
+      '<div class="psyx__reg psyx__a"><div class="fl l"></div><div class="fl r"></div><div class="tx"></div></div>' +
+      '<button type="button" class="psyx__btn"></button>';
+    box.querySelector('.psyx__q .tx').textContent = PSYX.quote;
+    box.querySelector('.psyx__a .tx').textContent = PSYX.about;
+    var btn = box.querySelector('.psyx__btn');
+    btn.textContent = PSYX.btn;
+    btn.addEventListener('click', function (ev) { ev.stopPropagation(); openDetail(PSYX.detail); });
+    var row = box.querySelector('.psyx__row');
+    function fill(st, tp) { var h = tickerItems(st, tp); row.innerHTML = h + h; }
+    fill();
+    if (window.fetch) {
+      var get = function (u) { return fetch(u, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); };
+      Promise.all([get(PSYX.stats), get(PSYX.topics)]).then(function (r) { if (r[0] || r[1]) fill(r[0], r[1]); });
+    }
+    disc.appendChild(box);
+    return box;
+  })();
+  function psyxShape(reg, top, D, m) {
+    var R = D / 2 - m, cy = D / 2 - top;
+    reg.style.top = top + 'px';
+    reg.querySelector('.l').style.shapeOutside = 'radial-gradient(circle ' + R + 'px at ' + (D / 2) + 'px ' + cy + 'px,transparent 99.6%,#000 100%)';
+    reg.querySelector('.r').style.shapeOutside = 'radial-gradient(circle ' + R + 'px at 0px ' + cy + 'px,transparent 99.6%,#000 100%)';
+  }
+  function psyxTextBox(reg) {
+    var r = document.createRange(); r.selectNodeContents(reg.querySelector('.tx'));
+    var rs = [].slice.call(r.getClientRects()), cr = psyx.getBoundingClientRect(), k = psyx.offsetWidth / (cr.width || 1);
+    return { l: (Math.min.apply(0, rs.map(function (x) { return x.left; })) - cr.left) * k,
+             r: (Math.max.apply(0, rs.map(function (x) { return x.right; })) - cr.left) * k,
+             h: reg.querySelector('.tx').offsetHeight };
+  }
+  // раскладка под итоговый размер круга (пока круг растёт, слой ещё прозрачный)
+  function layPsyx() {
+    if (active !== 'focus') return;
+    var D = Math.round(nodes.psy.t.r * 2), s = Math.max(mobile ? 0.97 : 0.8, Math.min(1.2, D / 440));
+    psyx.style.width = psyx.style.height = D + 'px';
+    var q = psyx.querySelector('.psyx__q'), a = psyx.querySelector('.psyx__a'), h = psyx.querySelector('.psyx__h'),
+        k = psyx.querySelector('.psyx__tick'), b = psyx.querySelector('.psyx__btn'), sp = psyx.querySelector('.psyx__spot');
+    var gap = Math.round(D * 0.045);
+    // название: крупно, но с воздухом по краям
+    var fs = 29 * s; h.style.fontSize = fs + 'px';
+    var tw = function () { var r = document.createRange(); r.selectNodeContents(h); return r.getBoundingClientRect().width * psyx.offsetWidth / (psyx.getBoundingClientRect().width || 1); };
+    for (var i = 0; i < 16 && tw() > D * 0.88; i++) { fs -= 1; h.style.fontSize = fs + 'px'; }
+    k.style.fontSize = Math.max(12, 13 * s) + 'px';
+    b.style.fontSize = Math.max(13, 13.5 * s) + 'px';
+    var th = h.offsetHeight, block = th + 5 + k.offsetHeight, ty = Math.round(D / 2 - block / 2);
+    h.style.top = ty + 'px'; k.style.top = (ty + th + 5) + 'px';
+    sp.style.top = (ty - 16) + 'px'; sp.style.height = (block + 32) + 'px';
+    // верх: прижат к названию; если не помещается — шрифт меньше
+    var qf = 17 * s; q.style.fontSize = qf + 'px';
+    for (var f = 0; f < 14; f++) {
+      q.style.height = D + 'px'; var T = ty - gap - 120;
+      for (var j = 0; j < 6; j++) { psyxShape(q, T, D, 24); T = Math.round(ty - gap - q.querySelector('.tx').offsetHeight); }
+      psyxShape(q, T, D, 24);
+      if (T >= D * 0.075) break;
+      qf -= 0.5; q.style.fontSize = qf + 'px';
+    }
+    q.style.height = q.querySelector('.tx').offsetHeight + 'px';
+    // низ: под строкой; кнопка у нижнего края круга
+    var btop = Math.round(D * 0.88); b.style.top = btop + 'px';
+    var af = 15 * s; a.style.fontSize = af + 'px';
+    var by = ty + block + gap - 6;
+    for (var g = 0; g < 20; g++) {
+      a.style.height = D + 'px'; psyxShape(a, by, D, 10);
+      var hb = a.querySelector('.tx').offsetHeight;
+      if (by + hb + 12 <= btop || g === 19) { a.style.height = hb + 'px'; break; }
+      af -= 0.5; a.style.fontSize = af + 'px';
+    }
+    // мягкие тени под верхним и нижним текстом
+    var gl = psyx.querySelectorAll('.psyx__glow');
+    [q, a].forEach(function (reg, n) {
+      var tb = psyxTextBox(reg), y = parseFloat(reg.style.top);
+      gl[n].style.left = (tb.l - 50) + 'px'; gl[n].style.width = (tb.r - tb.l + 100) + 'px';
+      gl[n].style.top = (y - 30) + 'px'; gl[n].style.height = (tb.h + 60) + 'px';
+    });
+  }
+
   // ---------- Модалка ----------
   function openDetail(id) {
     var src = document.getElementById(id);
@@ -568,4 +680,5 @@
   layout();
   order.forEach(function (n) { n.x = n.t.x; n.y = n.t.y; n.r = n.t.r; n.op = n.t.op; });
   requestAnimationFrame(frame);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layPsyx(); });
 })();

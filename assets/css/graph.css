@@ -280,14 +280,37 @@ button.cta{border:0;cursor:pointer;font-family:inherit}
 .node--leaf .pf{display:flex;flex-direction:column;align-items:center;line-height:1}
 .node--leaf .pf b{white-space:nowrap;font-size:1.12em}
 .node--leaf .pf span{font-size:max(10.5px,.9em);font-weight:600;margin-top:.14em}
-/* Психостоматология №1: кнопка только в раскрытом круге; на телефоне текст плотнее, чтобы влезал */
-body[data-active="psy"] .node--hub[data-id="psy"] .cta{display:none}
-@media (max-width:699px){
-  body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full{padding:0 13cqw;gap:2.4cqw}
-  body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full .h{font-size:6.2cqw}
-  body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full .d{font-size:3.25cqw;line-height:1.28}
-  body[data-active="focus"] .node--hub[data-id="psy"].m-full .cta{font-size:3.6cqw;padding:2cqw 5cqw}
-}
+
+/* ---- Раскрытая «Психостоматология №1» (#psy): цитата, название + бегущая строка, описание, кнопка ---- */
+.psyx{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .45s ease,visibility 0s linear .45s;z-index:3}
+body[data-active="focus"] .node--hub[data-id="psy"] .psyx{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .55s ease .25s,visibility 0s}
+body[data-active="focus"] .node--hub[data-id="psy"] .v-full{display:none}
+body[data-active="focus"] .node--hub[data-id="psy"].m-full .disc::after{content:"";position:absolute;inset:0;background:rgba(18,16,20,.5);pointer-events:none}
+.psyx__reg{position:absolute;left:0;right:0;text-align:center;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.psyx__reg .fl{height:100%;width:50%}
+.psyx__reg .fl.l{float:left}
+.psyx__reg .fl.r{float:right}
+.psyx__q{font-family:Georgia,"Times New Roman",serif;line-height:1.4}
+.psyx__a{font-family:"Trebuchet MS",Arial,sans-serif;line-height:1.42;color:rgba(255,255,255,.93)}
+.psyx__glow{position:absolute;z-index:1;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,.62) 0%,rgba(0,0,0,.45) 45%,rgba(0,0,0,0) 72%)}
+.psyx__spot{position:absolute;left:0;right:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 50% 60% at 50% 50%,rgba(255,255,255,.28) 0%,rgba(255,255,255,.14) 55%,rgba(255,255,255,0) 100%)}
+.psyx__h{position:absolute;left:0;right:0;z-index:2;text-align:center;white-space:nowrap;line-height:1;
+  font-family:Arial,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:0}
+.psyx__tick{position:absolute;left:0;right:0;z-index:2;overflow:hidden;white-space:nowrap;padding:7px 0;
+  border-top:1px solid rgba(255,255,255,.35);border-bottom:1px solid rgba(255,255,255,.35);
+  -webkit-mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
+.psyx__row{display:inline-block;font-family:Arial,sans-serif;font-weight:700;color:rgba(255,255,255,.9);animation:psyx-run 70s linear infinite}
+.psyx__row span{padding:0 13px}
+.psyx__row .dot{padding:0;color:rgba(255,255,255,.35)}
+.psyx__row b,.psyx__row em{font-style:normal;color:#ffb39f}
+@keyframes psyx-run{to{transform:translateX(-50%)}}
+.psyx__btn{position:absolute;left:50%;transform:translateX(-50%);z-index:3;border:0;border-radius:999px;background:#fff;color:#1b1b1b;cursor:pointer;
+  white-space:nowrap;font-family:Arial,sans-serif;font-weight:700;padding:8px 15px;animation:psyx-pulse 5s ease-out infinite}
+.psyx__btn:hover{background:#ffe9e3}
+@keyframes psyx-pulse{0%,78%{box-shadow:0 0 0 0 rgba(255,255,255,0)}82%{box-shadow:0 0 0 0 rgba(255,255,255,.45)}100%{box-shadow:0 0 0 16px rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){.psyx__row{animation-duration:200s}.psyx__btn{animation:none}}
 
 /* ---- Окно «И что в итоге…»: фото, два блока, «Понятненько» ---- */
 .modal.modal--wide{max-width:1000px;padding:0;overflow:auto}
