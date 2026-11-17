@@ -565,7 +565,7 @@
     st = st || { slots_total: 194, participants_active: 15, streams_per_week: 13, limbic_unload_30d: { hours: 51, minutes: 17 } };
     var h = st.limbic_unload_30d.hours, mi = st.limbic_unload_30d.minutes;
     var it = [
-      '<b>' + st.slots_total + '</b> ' + plural(st.slots_total, 'созвон', 'созвона', 'созвонов') + ' по 15 минут',
+      '<b>' + st.slots_total + '</b> ' + plural(st.slots_total, 'созвон', 'созвона', 'созвонов') + ' по 15 минут за месяц',
       '<b>' + st.participants_active + '</b> ' + plural(st.participants_active, 'активный участник', 'активных участника', 'активных участников'),
       '<b>' + st.streams_per_week + '</b> ' + plural(st.streams_per_week, 'эфир', 'эфира', 'эфиров') + ' в неделю',
       '<b>' + h + ' ' + plural(h, 'час', 'часа', 'часов') + ' ' + mi + ' ' + plural(mi, 'минута', 'минуты', 'минут') + '</b> эмоциональной разгрузки за прошедшие 30 дней',
