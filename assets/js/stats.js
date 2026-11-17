@@ -2,7 +2,7 @@
    Включается, когда в GC_CODE записан код счётчика (имя из адреса https://<код>.goatcounter.com).
    Ничего личного не отправляется: только путь на сайте, заголовок, откуда пришли и размер экрана. */
 (function () {
-  var GC_CODE = '';   // ← сюда код счётчика, например 'psyteeth'
+  var GC_CODE = 'psyteeth';   // код счётчика: https://psyteeth.goatcounter.com
 
   var off = !GC_CODE || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || /[?&](tune|debug)=1/.test(location.search);
   var base = location.pathname.replace(/^\/fusionsite/, '') || '/';   // одинаковые пути и на github.io/fusionsite, и на psyteeth.ru
