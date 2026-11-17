@@ -618,9 +618,9 @@
   // Настройки раскладки (отдельно телефон / компьютер). Размеры — при круге 440 px, дальше масштабируются.
   // Подбираются конструктором: открыть сайт с ?tune=1#psy (см. ниже).
   var PSYX_TUNE = {
-    mobile:  { center: 0.51, gap: 0.045, hSize: 32, hSpace: 0.022, hMaxW: 0.92, tickSize: 13,
-               qSize: 17.5, qEdge: 14, qMinTop: 0.05, aSize: 15, aEdge: 10, aShift: -6,
-               btnSize: 13.5, btnPadX: 15, btnPadY: 8, btnGap: 0.04, btnMax: 0.88, fit: 1 },
+    mobile:  { center: 0.515, gap: 0.055, hSize: 25, hSpace: 0.034, hMaxW: 0.94, tickSize: 10,
+               qSize: 17, qEdge: 10, qMinTop: 0.07, aSize: 12.5, aEdge: 16, aShift: -8,
+               btnSize: 12.5, btnPadX: 8, btnPadY: 8, btnGap: 0, btnMax: 0.88, fit: 1 },   // подобрано в конструкторе 17.11
     desktop: { center: 0.48, gap: 0.045, hSize: 32, hSpace: 0.022, hMaxW: 0.92, tickSize: 13,
                qSize: 17.5, qEdge: 14, qMinTop: 0.05, aSize: 15, aEdge: 10, aShift: -6,
                btnSize: 13.5, btnPadX: 15, btnPadY: 8, btnGap: 0.04, btnMax: 0.88, fit: 1 }
