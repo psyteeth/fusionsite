@@ -503,7 +503,7 @@
     var dt = last ? Math.min(ts - last, 64) : 16.7;
     last = ts;
     // скорость не зависит от частоты кадров (60/120 Гц, подтормаживания)
-    var k = 1 - Math.pow(1 - 0.085, dt / 16.7);
+    var k = 1 - Math.pow(1 - (demo ? 0.2 : 0.085), dt / 16.7);   // во время демонстрации — быстрее
     var t = ts / 1000;
     order.forEach(function (n) {
       var g = n.t;
@@ -545,6 +545,7 @@
   // ---------- Мелодия золотого зубика ----------
   var snd = null, sndEl = null, sndFade = null;
   function stopSound() {
+    stopDemo();
     if (!snd || snd.paused) { if (sndEl) sndEl.classList.remove('is-playing'); return; }
     clearInterval(sndFade);
     var a = snd, v = a.volume;
@@ -555,15 +556,41 @@
     if (sndEl) sndEl.classList.remove('is-playing');
   }
   function toggleSound(def, el) {
+    if (Date.now() - userStoppedAt < 500) return;   // это нажатие уже остановило показ
     if (snd && !snd.paused) { stopSound(); return; }
     if (!snd) {
       snd = new Audio('./assets/audio/' + def.sound);
-      snd.addEventListener('ended', function () { if (sndEl) sndEl.classList.remove('is-playing'); });
+      snd.addEventListener('ended', function () { if (sndEl) sndEl.classList.remove('is-playing'); stopDemo(); });
     }
     clearInterval(sndFade); try { snd.volume = 1; } catch (e) {}
     snd.currentTime = 0; sndEl = el;
     var p = snd.play(); if (p && p.catch) p.catch(function () {});
     el.classList.add('is-playing');
+    startDemo();
+  }
+  // Пасхалка: под мелодию по очереди раскрываются и сворачиваются все круги
+  var demo = null;
+  var DEMO_SEQ = ['psy', '', 'blog', '', 'efiry', '', 'vopros', '', 'uslugi', ''];
+  function startDemo() {
+    stopDemo();
+    var step = 0, dur = (snd && isFinite(snd.duration) && snd.duration > 2 ? snd.duration : 8.3) * 1000;
+    var each = Math.max(600, Math.floor((dur - 400) / DEMO_SEQ.length));
+    demo = { t: null };
+    (function next() {
+      if (!demo) return;
+      if (step >= DEMO_SEQ.length) { stopDemo(); return; }
+      location.hash = DEMO_SEQ[step++];
+      demo.t = setTimeout(next, each);
+    })();
+    // любое касание или клавиша — стоп (после текущего нажатия)
+    setTimeout(function () { if (demo) { window.addEventListener('pointerdown', userStop, true); window.addEventListener('keydown', userStop, true); } }, 0);
+  }
+  var userStoppedAt = 0;
+  function userStop() { userStoppedAt = Date.now(); stopDemo(); stopSound(); }
+  function stopDemo() {
+    if (!demo) return;
+    clearTimeout(demo.t); demo = null;
+    window.removeEventListener('pointerdown', userStop, true); window.removeEventListener('keydown', userStop, true);
   }
 
   // ---------- Навигация ----------
@@ -584,7 +611,7 @@
     else { history.pushState(null, '', hash); apply(); }
   }
   function apply() {
-    stopSound();
+    if (!demo) stopSound();
     active = idFromHash();
     document.body.dataset.active = active;
     layout();
