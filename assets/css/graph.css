@@ -280,5 +280,11 @@ button.cta{border:0;cursor:pointer;font-family:inherit}
 .node--leaf .pf{display:flex;flex-direction:column;align-items:center;line-height:1}
 .node--leaf .pf b{white-space:nowrap;font-size:1.12em}
 .node--leaf .pf span{font-size:max(10.5px,.9em);font-weight:600;margin-top:.14em}
-/* Психостоматология №1: кнопка только в раскрытом круге */
+/* Психостоматология №1: кнопка только в раскрытом круге; на телефоне текст плотнее, чтобы влезал */
 body[data-active="psy"] .node--hub[data-id="psy"] .cta{display:none}
+@media (max-width:699px){
+  body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full{padding:0 13cqw;gap:2.4cqw}
+  body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full .h{font-size:6.2cqw}
+  body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full .d{font-size:3.25cqw;line-height:1.28}
+  body[data-active="focus"] .node--hub[data-id="psy"].m-full .cta{font-size:3.6cqw;padding:2cqw 5cqw}
+}

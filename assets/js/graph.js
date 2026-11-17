@@ -289,7 +289,7 @@
   function layoutFocus() {
     var cx = W / 2, cy = H / 2;
     var m = Math.min(W, H);
-    var R = mobile ? W * 0.43 : m * 0.34;
+    var R = mobile ? Math.min(W * 0.48, W / 2 - 8) : m * 0.34;
     var hr = mobile ? 26 : 44;
     var px = mobile ? 40 : 120, py = mobile ? 70 : 100;
     set('psy', cx, cy, R, 1, 'full');
