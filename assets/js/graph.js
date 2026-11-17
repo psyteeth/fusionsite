@@ -503,12 +503,23 @@
     var dt = last ? Math.min(ts - last, 64) : 16.7;
     last = ts;
     // скорость не зависит от частоты кадров (60/120 Гц, подтормаживания)
-    var k = 1 - Math.pow(1 - (demo ? 0.2 : 0.085), dt / 16.7);   // во время демонстрации — быстрее
+    var k = 1 - Math.pow(1 - 0.085, dt / 16.7);
     var t = ts / 1000;
+    var tw = null;
+    if (demo && demo.tw) {
+      var pr = Math.min(1, (performance.now() - demo.tw.t0) / demo.tw.dur);
+      tw = pr < 0.5 ? 4 * pr * pr * pr : 1 - Math.pow(-2 * pr + 2, 3) / 2;   // мягкий разгон и торможение
+    }
     order.forEach(function (n) {
       var g = n.t;
-      n.x += (g.x - n.x) * k; n.y += (g.y - n.y) * k;
-      n.r += (g.r - n.r) * k; n.op += (g.op - n.op) * k;
+      if (tw !== null && n.from) {
+        var f = n.from;
+        n.x = f.x + (g.x - f.x) * tw; n.y = f.y + (g.y - f.y) * tw;
+        n.r = f.r + (g.r - f.r) * tw; n.op = f.op + (g.op - f.op) * tw;
+      } else {
+        n.x += (g.x - n.x) * k; n.y += (g.y - n.y) * k;
+        n.r += (g.r - n.r) * k; n.op += (g.op - n.op) * k;
+      }
       if (Math.abs(g.r - n.r) < 0.05) n.r = g.r;
       if (Math.abs(g.op - n.op) < 0.005) n.op = g.op;
       var fx = reduce ? 0 : Math.sin(t * 0.7 + n.phase) * n.amp;
@@ -575,11 +586,16 @@
     stopDemo();
     var step = 0, dur = (snd && isFinite(snd.duration) && snd.duration > 2 ? snd.duration : 8.3) * 1000;
     var each = Math.max(600, Math.floor((dur - 400) / (DEMO_SEQ.length - 1)));   // последнее сворачивание заканчивается вместе с треком
-    demo = { t: null };
+    demo = { t: null, tw: null, back: active };
     (function next() {
       if (!demo) return;
       if (step >= DEMO_SEQ.length) { stopDemo(); return; }
-      location.hash = DEMO_SEQ[step++];
+      var id = DEMO_SEQ[step++];
+      order.forEach(function (n) { n.from = { x: n.x, y: n.y, r: n.r, op: n.op }; });
+      active = id === 'psy' ? 'focus' : (id || 'psy');
+      document.body.dataset.active = active;
+      layout();
+      demo.tw = { t0: performance.now(), dur: each };
       demo.t = setTimeout(next, each);
     })();
     // любое касание или клавиша — стоп (после текущего нажатия)
@@ -590,6 +606,9 @@
   function stopDemo() {
     if (!demo) return;
     clearTimeout(demo.t); demo = null;
+    order.forEach(function (n) { n.from = null; });
+    var want = idFromHash();
+    if (want !== active) { active = want; document.body.dataset.active = active; layout(); }
     window.removeEventListener('pointerdown', userStop, true); window.removeEventListener('keydown', userStop, true);
   }
 
