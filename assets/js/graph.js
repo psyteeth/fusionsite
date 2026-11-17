@@ -43,7 +43,7 @@
   var HOME_POS = { uslugi: [-1, -1], blog: [1, -1], efiry: [1, 1], vopros: [-1, 1] };
 
   var LEAVES = [
-    { id: 'diag',   parent: 'uslugi', label: 'Бесплатная диагностика', inner: '0 ₽', detail: 'd-diag', sun: true, dotSvg: ICON_TOOTH },   // на главной в жёлтом кружке — нарисованный зубик
+    { id: 'diag',   parent: 'uslugi', label: 'Бесплатная диагностика', inner: '0 ₽', detail: 'd-diag', sun: true, dotSvg: ICON_TOOTH, sound: 'tooth.m4a' },   // на главной в жёлтом кружке — нарисованный зубик
     { id: 'cons',   parent: 'uslugi', label: 'Первичная консультация', inner: '2 500 ₽', detail: 'd-cons' },
     { id: 'group',  parent: 'uslugi', label: 'Работа с зубами\nв группе', inner: '<span class="pf"><b>15 000 ₽</b><span>месяц</span></span>', detail: 'd-group' },
     { id: 'clinic', parent: 'uslugi', label: 'Стоматологам', emoji: '🧑‍⚕️', detail: 'd-clinic' },
@@ -169,7 +169,11 @@
       root.appendChild(d2);
       // одно слово или строки, заданные вручную через \n, — без автоматических переносов
       root.appendChild(el('span', 'lab' + (/\n/.test(def.label) ? ' lab--pre' : /\s/.test(def.label) ? '' : ' lab--one'), def.label));
-      if (def.detail) root.addEventListener('click', function () { openDetail(def.detail); });
+      if (def.detail) root.addEventListener('click', function () {
+        // на главной золотой зубик не открывает окно, а играет мелодию (повторное нажатие — тише и стоп)
+        if (def.sound && active === 'psy') { toggleSound(def, root); return; }
+        openDetail(def.detail);
+      });
     }
     root.dataset.id = def.id;
     if (def.dot) root.style.setProperty('--dot', def.dot);
@@ -518,6 +522,30 @@
     requestAnimationFrame(frame);
   }
 
+  // ---------- Мелодия золотого зубика ----------
+  var snd = null, sndEl = null, sndFade = null;
+  function stopSound() {
+    if (!snd || snd.paused) { if (sndEl) sndEl.classList.remove('is-playing'); return; }
+    clearInterval(sndFade);
+    var a = snd, v = a.volume;
+    sndFade = setInterval(function () {   // плавно затихает (на iPhone громкость не меняется — просто стоп)
+      v -= 0.08; try { a.volume = Math.max(0, v); } catch (e) {}
+      if (v <= 0 || a.volume === 1) { clearInterval(sndFade); a.pause(); a.currentTime = 0; try { a.volume = 1; } catch (e) {} }
+    }, 30);
+    if (sndEl) sndEl.classList.remove('is-playing');
+  }
+  function toggleSound(def, el) {
+    if (snd && !snd.paused) { stopSound(); return; }
+    if (!snd) {
+      snd = new Audio('./assets/audio/' + def.sound);
+      snd.addEventListener('ended', function () { if (sndEl) sndEl.classList.remove('is-playing'); });
+    }
+    clearInterval(sndFade); try { snd.volume = 1; } catch (e) {}
+    snd.currentTime = 0; sndEl = el;
+    var p = snd.play(); if (p && p.catch) p.catch(function () {});
+    el.classList.add('is-playing');
+  }
+
   // ---------- Навигация ----------
   function idFromHash() {
     var h = location.hash.replace('#', '');
@@ -536,6 +564,7 @@
     else { history.pushState(null, '', hash); apply(); }
   }
   function apply() {
+    stopSound();
     active = idFromHash();
     document.body.dataset.active = active;
     layout();

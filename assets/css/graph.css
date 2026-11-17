@@ -332,3 +332,8 @@ body[data-active="focus"] .node--hub[data-id="psy"].m-full .disc::after{content:
   .ex__img{height:100%;object-fit:cover;object-position:42% 50%}
   .ex__b{padding:24px 26px;display:flex;flex-direction:column;justify-content:center}
 }
+
+/* золотой зубик играет мелодию — слегка покачивается */
+.node--leaf.is-playing .disc{animation:tooth-dance .55s ease-in-out infinite alternate}
+@keyframes tooth-dance{from{transform:rotate(-12deg) scale(1.06)}to{transform:rotate(12deg) scale(1.12)}}
+@media (prefers-reduced-motion:reduce){.node--leaf.is-playing .disc{animation:none}}
