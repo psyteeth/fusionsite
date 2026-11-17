@@ -624,12 +624,12 @@
         k = psyx.querySelector('.psyx__tick'), b = psyx.querySelector('.psyx__btn'), sp = psyx.querySelector('.psyx__spot');
     var gap = Math.round(D * 0.045);
     // название: крупно, но с воздухом по краям
-    var fs = 29 * s; h.style.fontSize = fs + 'px';
+    var fs = 32 * s; h.style.fontSize = fs + 'px';
     var tw = function () { var r = document.createRange(); r.selectNodeContents(h); return r.getBoundingClientRect().width * psyx.offsetWidth / (psyx.getBoundingClientRect().width || 1); };
-    for (var i = 0; i < 16 && tw() > D * 0.88; i++) { fs -= 1; h.style.fontSize = fs + 'px'; }
+    for (var i = 0; i < 20 && tw() > D * 0.92; i++) { fs -= 1; h.style.fontSize = fs + 'px'; }
     k.style.fontSize = Math.max(12, 13 * s) + 'px';
     b.style.fontSize = Math.max(13, 13.5 * s) + 'px';
-    var th = h.offsetHeight, block = th + 5 + k.offsetHeight, ty = Math.round(D / 2 - block / 2);
+    var th = h.offsetHeight, block = th + 5 + k.offsetHeight, ty = Math.round(D * 0.47 - block / 2);
     h.style.top = ty + 'px'; k.style.top = (ty + th + 5) + 'px';
     sp.style.top = (ty - 16) + 'px'; sp.style.height = (block + 32) + 'px';
     // верх: прижат к названию; если не помещается — шрифт меньше

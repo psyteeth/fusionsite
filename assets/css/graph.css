@@ -297,7 +297,7 @@ body[data-active="focus"] .node--hub[data-id="psy"].m-full .disc::after{content:
 .psyx__spot{position:absolute;left:0;right:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse 50% 60% at 50% 50%,rgba(255,255,255,.28) 0%,rgba(255,255,255,.14) 55%,rgba(255,255,255,0) 100%)}
 .psyx__h{position:absolute;left:0;right:0;z-index:2;text-align:center;white-space:nowrap;line-height:1;
-  font-family:Arial,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:0}
+  font-family:Arial,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.022em}
 .psyx__tick{position:absolute;left:0;right:0;z-index:2;overflow:hidden;white-space:nowrap;padding:7px 0;
   border-top:1px solid rgba(255,255,255,.35);border-bottom:1px solid rgba(255,255,255,.35);
   -webkit-mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
