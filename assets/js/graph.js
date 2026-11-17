@@ -549,7 +549,7 @@
   // ---------- Раскрытая «Психостоматология №1»: цитата, название + бегущая строка, описание, кнопка ----------
   // Текст сверху и снизу повторяет форму круга (поплавки с вырезом по окружности); название и строка — ровно по центру.
   var PSYX = {
-    quote: 'Ты держишь мир в отношениях, помогаешь, терпишь и не показываешь, как тебе тяжело и больно… А зубы ноют, портятся и лечатся по кругу…',
+    quote: 'Ты\u00a0держишь мир в отношениях, помогаешь, терпишь и не показываешь, как тебе тяжело и больно… А зубы ноют, портятся и лечатся по кругу…',
     about: 'Мы с 2020 года работаем с зубами через отношения. На диагностиках видно, как конкретный зуб откликается на конкретную историю в отношениях, где человек рассказывает о себе одно, а его зубы — другое…',
     btn: 'И что в итоге…', detail: 'd-example',
     // цифры и темы недели берутся с дашборда; это — запас, если он не ответил
@@ -615,43 +615,64 @@
              r: (Math.max.apply(0, rs.map(function (x) { return x.right; })) - cr.left) * k,
              h: reg.querySelector('.tx').offsetHeight };
   }
+  // Настройки раскладки (отдельно телефон / компьютер). Размеры — при круге 440 px, дальше масштабируются.
+  // Подбираются конструктором: открыть сайт с ?tune=1#psy (см. ниже).
+  var PSYX_TUNE = {
+    mobile:  { center: 0.51, gap: 0.045, hSize: 32, hSpace: 0.022, hMaxW: 0.92, tickSize: 13,
+               qSize: 17.5, qEdge: 14, qMinTop: 0.05, aSize: 15, aEdge: 10, aShift: -6,
+               btnSize: 13.5, btnPadX: 15, btnPadY: 8, btnGap: 0.04, btnMax: 0.88, fit: 1 },
+    desktop: { center: 0.48, gap: 0.045, hSize: 32, hSpace: 0.022, hMaxW: 0.92, tickSize: 13,
+               qSize: 17.5, qEdge: 14, qMinTop: 0.05, aSize: 15, aEdge: 10, aShift: -6,
+               btnSize: 13.5, btnPadX: 15, btnPadY: 8, btnGap: 0.04, btnMax: 0.88, fit: 1 }
+  };
+  var psyxTuneOn = /[?&]tune=1/.test(location.search);
+  function psyxT() {
+    var key = mobile ? 'mobile' : 'desktop', t = {}, base = PSYX_TUNE[key];
+    for (var k in base) t[k] = base[k];
+    if (psyxTuneOn) { try { var o = JSON.parse(localStorage.getItem('psyx-tune-' + key) || '{}'); for (var k2 in o) t[k2] = o[k2]; } catch (e) {} }
+    return t;
+  }
+  var psyxNow = {};   // фактические размеры после подгонки (видны в конструкторе)
   // раскладка под итоговый размер круга (пока круг растёт, слой ещё прозрачный)
   function layPsyx() {
     if (active !== 'focus') return;
+    var T0 = psyxT();
     var D = Math.round(nodes.psy.t.r * 2), s = Math.max(mobile ? 0.97 : 0.8, Math.min(1.2, D / 440));
     psyx.style.width = psyx.style.height = D + 'px';
     var q = psyx.querySelector('.psyx__q'), a = psyx.querySelector('.psyx__a'), h = psyx.querySelector('.psyx__h'),
         k = psyx.querySelector('.psyx__tick'), b = psyx.querySelector('.psyx__btn'), sp = psyx.querySelector('.psyx__spot');
-    var gap = Math.round(D * 0.045);
-    // название: крупно, но с воздухом по краям
-    var fs = 32 * s; h.style.fontSize = fs + 'px';
+    var gap = Math.round(D * T0.gap), fit = !!T0.fit;
+    // название
+    var fs = T0.hSize * s; h.style.fontSize = fs + 'px'; h.style.letterSpacing = T0.hSpace + 'em';
     var tw = function () { var r = document.createRange(); r.selectNodeContents(h); return r.getBoundingClientRect().width * psyx.offsetWidth / (psyx.getBoundingClientRect().width || 1); };
-    for (var i = 0; i < 20 && tw() > D * 0.92; i++) { fs -= 1; h.style.fontSize = fs + 'px'; }
-    k.style.fontSize = Math.max(12, 13 * s) + 'px';
-    b.style.fontSize = Math.max(13, 13.5 * s) + 'px';
-    var th = h.offsetHeight, block = th + 5 + k.offsetHeight, ty = Math.round(D * (mobile ? 0.51 : 0.48) - block / 2);
+    for (var i = 0; fit && i < 30 && tw() > D * T0.hMaxW; i++) { fs -= 1; h.style.fontSize = fs + 'px'; }
+    k.style.fontSize = Math.max(10, T0.tickSize * s) + 'px';
+    b.style.fontSize = Math.max(11, T0.btnSize * s) + 'px';
+    b.style.padding = T0.btnPadY + 'px ' + T0.btnPadX + 'px';
+    var th = h.offsetHeight, block = th + 5 + k.offsetHeight, ty = Math.round(D * T0.center - block / 2);
     h.style.top = ty + 'px'; k.style.top = (ty + th + 5) + 'px';
     sp.style.top = (ty - 16) + 'px'; sp.style.height = (block + 32) + 'px';
-    // верх: прижат к названию; если не помещается — шрифт меньше
-    var qf = 17.5 * s; q.style.fontSize = qf + 'px';
-    for (var f = 0; f < 14; f++) {
+    // верх: прижат к названию; при подгонке — шрифт меньше, если не помещается
+    var qf = T0.qSize * s; q.style.fontSize = qf + 'px';
+    for (var f = 0; f < 24; f++) {
       q.style.height = D + 'px'; var T = ty - gap - 120;
-      for (var j = 0; j < 6; j++) { psyxShape(q, T, D, 14); T = Math.round(ty - gap - q.querySelector('.tx').offsetHeight); }
-      psyxShape(q, T, D, 14);
-      if (T >= D * 0.05) break;
+      for (var j = 0; j < 6; j++) { psyxShape(q, T, D, T0.qEdge); T = Math.round(ty - gap - q.querySelector('.tx').offsetHeight); }
+      psyxShape(q, T, D, T0.qEdge);
+      if (!fit || T >= D * T0.qMinTop) break;
       qf -= 0.5; q.style.fontSize = qf + 'px';
     }
     q.style.height = q.querySelector('.tx').offsetHeight + 'px';
-    // низ: под строкой; кнопка у нижнего края круга
-    var btop = Math.round(D * 0.88); b.style.top = btop + 'px';
-    var af = 15 * s; a.style.fontSize = af + 'px';
-    var by = ty + block + gap - 6;
-    for (var g = 0; g < 20; g++) {
-      a.style.height = D + 'px'; psyxShape(a, by, D, 10);
+    // низ: под строкой; кнопка сразу под ним, но не ниже границы
+    var btop = Math.round(D * T0.btnMax);
+    var af = T0.aSize * s; a.style.fontSize = af + 'px';
+    var by = ty + block + gap + T0.aShift, bg = Math.max(8, Math.round(D * T0.btnGap));
+    for (var g = 0; g < 30; g++) {
+      a.style.height = D + 'px'; psyxShape(a, by, D, T0.aEdge);
       var hb = a.querySelector('.tx').offsetHeight;
-      if (by + hb + 12 <= btop || g === 19) { a.style.height = hb + 'px'; b.style.top = Math.min(btop, by + hb + Math.max(14, Math.round(D * 0.04))) + 'px'; break; }
+      if (!fit || by + hb + 12 <= btop || g === 29) { a.style.height = hb + 'px'; b.style.top = (fit ? Math.min(btop, by + hb + bg) : by + hb + bg) + 'px'; break; }
       af -= 0.5; a.style.fontSize = af + 'px';
     }
+    psyxNow = { 'название': Math.round(fs * 10) / 10, 'верх': Math.round(qf * 10) / 10, 'низ': Math.round(af * 10) / 10, 'круг': D };
     // мягкие тени под верхним и нижним текстом
     var gl = psyx.querySelectorAll('.psyx__glow');
     [q, a].forEach(function (reg, n) {
@@ -659,7 +680,65 @@
       gl[n].style.left = (tb.l - 50) + 'px'; gl[n].style.width = (tb.r - tb.l + 100) + 'px';
       gl[n].style.top = (y - 30) + 'px'; gl[n].style.height = (tb.h + 60) + 'px';
     });
+    if (psyxTuneOn && window.psyxPanelSync) window.psyxPanelSync();
   }
+
+  // ---------- Конструктор раскладки: ?tune=1#psy ----------
+  if (psyxTuneOn) (function () {
+    var SPEC = [
+      ['Верхний текст', null],
+      ['qSize', 'размер', 10, 26, 0.5], ['qEdge', 'отступ от края круга', 0, 60, 1], ['qMinTop', 'не выше (доля круга)', 0, 0.2, 0.005],
+      ['Название и строка', null],
+      ['center', 'по высоте (0.5 — центр)', 0.35, 0.65, 0.005], ['hSize', 'размер названия', 18, 44, 0.5], ['hSpace', 'разрядка', -0.02, 0.15, 0.002],
+      ['hMaxW', 'макс. ширина (доля)', 0.7, 1, 0.01], ['tickSize', 'размер строки', 10, 18, 0.5], ['gap', 'отступы до текстов', 0, 0.12, 0.005],
+      ['Нижний текст', null],
+      ['aSize', 'размер', 10, 22, 0.5], ['aEdge', 'отступ от края круга', 0, 60, 1], ['aShift', 'сдвиг вверх / вниз', -30, 30, 1],
+      ['Кнопка «И что в итоге…»', null],
+      ['btnSize', 'размер текста', 11, 20, 0.5], ['btnPadX', 'ширина (поля по бокам)', 4, 40, 1], ['btnPadY', 'высота (поля сверху/снизу)', 2, 20, 1],
+      ['btnGap', 'отступ от текста', 0, 0.12, 0.005], ['btnMax', 'не ниже (доля круга)', 0.7, 0.97, 0.005],
+      ['Общее', null], ['fit', 'автоподгонка (1 — вкл, 0 — выкл)', 0, 1, 1]
+    ];
+    var css = el('style'); css.textContent =
+      '.tune{position:fixed;left:8px;right:8px;bottom:8px;z-index:200;max-height:36vh;overflow:auto;background:rgba(255,255,255,.95);border:1.5px solid #1b1b1b;border-radius:14px;padding:8px 10px 10px;font:12.5px/1.3 Arial,sans-serif;color:#1b1b1b;box-shadow:0 6px 24px rgba(0,0,0,.2)}' +
+      '.tune.up{bottom:auto;top:8px}.tune.min{max-height:none;overflow:visible;left:auto;width:auto}.tune.min .tune__body{display:none}' +
+      '.tune__top{display:flex;gap:6px;align-items:center;flex-wrap:wrap;position:sticky;top:-8px;background:#fff;padding:4px 0 6px;z-index:1}' +
+      '.tune__top b{margin-right:auto}.tune button{font:700 12px Arial;border:1.5px solid #1b1b1b;background:#fff;border-radius:999px;padding:5px 10px;cursor:pointer}' +
+      '.tune__h{font-weight:700;margin:10px 0 2px;color:#00a1c9}.tune__r{display:grid;grid-template-columns:42% 1fr 40px;gap:0 6px;align-items:center;margin:2px 0}' +
+      '.tune__r span{color:#444;font-size:11.5px}.tune__r input{width:100%}.tune__r output{text-align:right;font-weight:700}' +
+      '.tune__now{color:#6b6b6b;font-size:11.5px;margin-top:2px}.tune textarea{width:100%;height:70px;font:11px monospace;margin-top:6px}';
+    document.head.appendChild(css);
+    var key = function () { return 'psyx-tune-' + (mobile ? 'mobile' : 'desktop'); };
+    var p = el('div', 'tune');
+    p.innerHTML = '<div class="tune__top"><b>Конструктор круга <span class="tune__dev"></span></b><button class="t-copy">Скопировать</button><button class="t-reset">Сбросить</button><button class="t-pos">⇅</button><button class="t-min">Свернуть</button></div>' +
+      '<div class="tune__body"><div class="tune__now"></div><div class="tune__rows"></div><textarea readonly hidden></textarea></div>';
+    document.body.appendChild(p);
+    var rows = p.querySelector('.tune__rows'), inputs = {};
+    SPEC.forEach(function (sp) {
+      if (!sp[1]) { rows.appendChild(el('div', 'tune__h', sp[0])); return; }
+      var r = el('label', 'tune__r'); r.innerHTML = '<span>' + sp[1] + '</span><input type="range" min="' + sp[2] + '" max="' + sp[3] + '" step="' + sp[4] + '"><output></output>';
+      var inp = r.querySelector('input'), out = r.querySelector('output');
+      inp.addEventListener('input', function () {
+        var o = {}; try { o = JSON.parse(localStorage.getItem(key()) || '{}'); } catch (e) {}
+        o[sp[0]] = parseFloat(inp.value); localStorage.setItem(key(), JSON.stringify(o)); out.textContent = inp.value; layPsyx();
+      });
+      inputs[sp[0]] = [inp, out]; rows.appendChild(r);
+    });
+    window.psyxPanelSync = function () {
+      var t = psyxT();
+      for (var k in inputs) { if (document.activeElement !== inputs[k][0]) inputs[k][0].value = t[k]; inputs[k][1].textContent = t[k]; }
+      p.querySelector('.tune__dev').textContent = mobile ? '· телефон' : '· компьютер';
+      p.querySelector('.tune__now').textContent = 'Сейчас, px: ' + Object.keys(psyxNow).map(function (k) { return k + ' ' + psyxNow[k]; }).join(' · ');
+    };
+    p.querySelector('.t-pos').addEventListener('click', function () { p.classList.toggle('up'); });
+    p.querySelector('.t-reset').addEventListener('click', function () { localStorage.removeItem(key()); layPsyx(); });
+    p.querySelector('.t-min').addEventListener('click', function () { p.classList.toggle('min'); this.textContent = p.classList.contains('min') ? 'Открыть' : 'Свернуть'; });
+    p.querySelector('.t-copy').addEventListener('click', function () {
+      var txt = 'psyx ' + (mobile ? 'mobile' : 'desktop') + ' ' + JSON.stringify(psyxT());
+      var ta = p.querySelector('textarea'); ta.hidden = false; ta.value = txt; ta.select();
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { p.querySelector('.t-copy').textContent = 'Скопировано ✓'; }).catch(function () {});
+    });
+    if (active !== 'focus') location.hash = 'psy';
+  })();
 
   // ---------- Модалка ----------
   function openDetail(id) {
