@@ -629,16 +629,16 @@
     for (var i = 0; i < 20 && tw() > D * 0.92; i++) { fs -= 1; h.style.fontSize = fs + 'px'; }
     k.style.fontSize = Math.max(12, 13 * s) + 'px';
     b.style.fontSize = Math.max(13, 13.5 * s) + 'px';
-    var th = h.offsetHeight, block = th + 5 + k.offsetHeight, ty = Math.round(D * 0.47 - block / 2);
+    var th = h.offsetHeight, block = th + 5 + k.offsetHeight, ty = Math.round(D * (mobile ? 0.51 : 0.48) - block / 2);
     h.style.top = ty + 'px'; k.style.top = (ty + th + 5) + 'px';
     sp.style.top = (ty - 16) + 'px'; sp.style.height = (block + 32) + 'px';
     // верх: прижат к названию; если не помещается — шрифт меньше
-    var qf = 17 * s; q.style.fontSize = qf + 'px';
+    var qf = 17.5 * s; q.style.fontSize = qf + 'px';
     for (var f = 0; f < 14; f++) {
       q.style.height = D + 'px'; var T = ty - gap - 120;
-      for (var j = 0; j < 6; j++) { psyxShape(q, T, D, 24); T = Math.round(ty - gap - q.querySelector('.tx').offsetHeight); }
-      psyxShape(q, T, D, 24);
-      if (T >= D * 0.075) break;
+      for (var j = 0; j < 6; j++) { psyxShape(q, T, D, 14); T = Math.round(ty - gap - q.querySelector('.tx').offsetHeight); }
+      psyxShape(q, T, D, 14);
+      if (T >= D * 0.05) break;
       qf -= 0.5; q.style.fontSize = qf + 'px';
     }
     q.style.height = q.querySelector('.tx').offsetHeight + 'px';
@@ -649,7 +649,7 @@
     for (var g = 0; g < 20; g++) {
       a.style.height = D + 'px'; psyxShape(a, by, D, 10);
       var hb = a.querySelector('.tx').offsetHeight;
-      if (by + hb + 12 <= btop || g === 19) { a.style.height = hb + 'px'; break; }
+      if (by + hb + 12 <= btop || g === 19) { a.style.height = hb + 'px'; b.style.top = Math.min(btop, by + hb + Math.max(14, Math.round(D * 0.04))) + 'px'; break; }
       af -= 0.5; a.style.fontSize = af + 'px';
     }
     // мягкие тени под верхним и нижним текстом
