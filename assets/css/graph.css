@@ -288,3 +288,24 @@ body[data-active="psy"] .node--hub[data-id="psy"] .cta{display:none}
   body[data-active="focus"] .node--hub[data-id="psy"].m-full .v-full .d{font-size:3.25cqw;line-height:1.28}
   body[data-active="focus"] .node--hub[data-id="psy"].m-full .cta{font-size:3.6cqw;padding:2cqw 5cqw}
 }
+
+/* ---- Окно «И что в итоге…»: фото, два блока, «Понятненько» ---- */
+.modal.modal--wide{max-width:1000px;padding:0;overflow:auto}
+.modal--wide .modal__close{top:10px;right:12px;width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.2);z-index:2;font-size:26px}
+.ex{display:block}
+.ex__img{display:block;width:100%;height:auto}
+.ex__b{padding:18px 20px 22px}
+.ex__lead{font-size:18px;font-weight:700;line-height:1.35;margin:0 40px 12px 0}
+.ex__col{border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.ex__col b{display:block;font-size:14px;margin-bottom:6px}
+.ex__col span{display:inline-block;margin:0 6px 6px 0;padding:3px 10px;border-radius:999px;color:#fff;font-size:14px;font-weight:700}
+.ex__col i{display:block;font-style:normal;font-size:14px;line-height:1.4;color:#8c4b45;margin-top:2px}
+.ex__she{background:rgba(11,134,166,.08)} .ex__she span{background:#0b86a6}
+.ex__teeth{background:rgba(140,75,69,.08)} .ex__teeth span{background:#8c4b45}
+.ex__end{font-size:15px;line-height:1.5;color:#333;margin:6px 0 0}
+.ex__ok{display:block;margin:16px auto 0;border:0;border-radius:999px;background:#1b1b1b;color:#fff;font:700 15px Arial,sans-serif;padding:11px 34px;cursor:pointer}
+@media (min-width:760px){
+  .ex{display:grid;grid-template-columns:1.05fr 1fr}
+  .ex__img{height:100%;object-fit:cover;object-position:42% 50%}
+  .ex__b{padding:24px 26px;display:flex;flex-direction:column;justify-content:center}
+}

@@ -554,6 +554,8 @@
     var src = document.getElementById(id);
     if (!src) return;
     modalBody.innerHTML = src.innerHTML;
+    modal.classList.toggle('modal--wide', src.hasAttribute('data-wide'));
+    modalBody.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeModal); });
     if (modal.showModal) modal.showModal(); else modal.setAttribute('open', '');
   }
   function closeModal() { if (modal.close) modal.close(); else modal.removeAttribute('open'); }
