@@ -574,7 +574,7 @@
   function startDemo() {
     stopDemo();
     var step = 0, dur = (snd && isFinite(snd.duration) && snd.duration > 2 ? snd.duration : 8.3) * 1000;
-    var each = Math.max(600, Math.floor((dur - 400) / DEMO_SEQ.length));
+    var each = Math.max(600, Math.floor((dur - 400) / (DEMO_SEQ.length - 1)));   // последнее сворачивание заканчивается вместе с треком
     demo = { t: null };
     (function next() {
       if (!demo) return;
