@@ -317,7 +317,7 @@ body[data-active="focus"] .node--hub[data-id="psy"].m-full .disc::after{content:
 .modal--wide .modal__close{top:10px;right:12px;width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.2);z-index:2;font-size:26px}
 .ex{display:block}
 .ex__img{display:block;width:100%;height:auto}
-.ex__b{padding:18px 20px 22px}
+.ex__b{padding:18px 20px 30px}
 .ex__lead{font-size:18px;font-weight:700;line-height:1.35;margin:0 40px 12px 0}
 .ex__col{border-radius:12px;padding:10px 12px;margin-bottom:10px}
 .ex__col b{display:block;font-size:14px;margin-bottom:6px}
@@ -326,7 +326,7 @@ body[data-active="focus"] .node--hub[data-id="psy"].m-full .disc::after{content:
 .ex__she{background:rgba(11,134,166,.08)} .ex__she span{background:#0b86a6}
 .ex__teeth{background:rgba(140,75,69,.08)} .ex__teeth span{background:#8c4b45}
 .ex__end{font-size:15px;line-height:1.5;color:#333;margin:6px 0 0}
-.ex__ok{display:block;margin:16px auto 0;border:0;border-radius:999px;background:#1b1b1b;color:#fff;font:700 15px Arial,sans-serif;padding:11px 34px;cursor:pointer}
+.ex__ok{display:block;margin:18px auto 6px;border:0;border-radius:999px;background:#1b1b1b;color:#fff;font:700 15px Arial,sans-serif;padding:11px 34px;cursor:pointer}
 @media (min-width:760px){
   .ex{display:grid;grid-template-columns:1.05fr 1fr}
   .ex__img{height:100%;object-fit:cover;object-position:42% 50%}
