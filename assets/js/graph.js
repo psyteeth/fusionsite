@@ -577,6 +577,7 @@
     snd.currentTime = 0; sndEl = el;
     var p = snd.play(); if (p && p.catch) p.catch(function () {});
     el.classList.add('is-playing');
+    stat('event', 'пасхалка', 'Мелодия и показ по зубику');
     startDemo();
   }
   // Пасхалка: под мелодию по очереди раскрываются и сворачиваются все круги
@@ -629,11 +630,17 @@
     if (hub.hash) location.hash = hub.hash;
     else { history.pushState(null, '', hash); apply(); }
   }
+  var lastPage = null;
+  function stat(kind, a, b) {
+    if (kind === 'page') { if (a === lastPage) return; lastPage = a; }   // hashchange и popstate приходят парой
+    if (window.psyStat) window.psyStat[kind](a, b);
+  }
   function apply() {
     if (!demo) stopSound();
     active = idFromHash();
     document.body.dataset.active = active;
     layout();
+    stat('page', location.hash);
     window.scrollTo(0, 0);
   }
   window.addEventListener('hashchange', apply);
@@ -840,6 +847,7 @@
     var src = document.getElementById(id);
     if (!src) return;
     modalBody.innerHTML = src.innerHTML;
+    var ttl = src.querySelector('h3'); stat('event', 'окно/' + id, ttl ? ttl.textContent : id);
     modal.classList.toggle('modal--wide', src.hasAttribute('data-wide'));
     modalBody.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeModal); });
     if (modal.showModal) modal.showModal(); else modal.setAttribute('open', '');
@@ -855,6 +863,7 @@
   active = idFromHash();
   document.body.dataset.active = active;
   layout();
+  stat('page', location.hash);
   order.forEach(function (n) { n.x = n.t.x; n.y = n.t.y; n.r = n.t.r; n.op = n.t.op; });
   requestAnimationFrame(frame);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layPsyx(); });
