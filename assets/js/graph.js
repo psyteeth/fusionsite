@@ -44,9 +44,9 @@
 
   var LEAVES = [
     { id: 'diag',   parent: 'uslugi', label: 'Бесплатная диагностика', inner: '0 ₽', detail: 'd-diag', sun: true, dotSvg: ICON_TOOTH, sound: 'tooth.m4a' },   // на главной в жёлтом кружке — нарисованный зубик
-    { id: 'cons',   parent: 'uslugi', label: 'Первичная консультация', inner: '2 500 ₽', detail: 'd-cons' },
     { id: 'group',  parent: 'uslugi', label: 'Работа с зубами\nв группе', inner: '<span class="pf"><b>15 000 ₽</b><span>месяц</span></span>', detail: 'd-group' },
     { id: 'clinic', parent: 'uslugi', label: 'Стоматологам', emoji: '🧑‍⚕️', detail: 'd-clinic' },
+    { id: 'cons',   parent: 'uslugi', label: 'Первичная консультация', inner: '2 500 ₽', detail: 'd-cons' },
     { id: 'kungfu', parent: 'group', sub: true, at: [[9, 11], [1, 3]], label: 'Зубное\nкунг-фу', emoji: '🥋', detail: 'd-kungfu' },
 
     { id: 'a1', parent: 'blog', label: 'Как с зубами, так и с людьми', detail: 'd-a1', img: '63343139-pexels-karolina-grab.jpg' },
