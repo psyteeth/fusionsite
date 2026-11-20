@@ -379,9 +379,11 @@
     // сателлиты молекулы — симметрично с трёх сторон (через 120°), с просветом от зубика;
     // ни один не садится на линию к центру и на подпись
     var toC = Math.atan2(cy2 - my, cx2 - mx);
+    var molParts = [[mx, my, tr]];   // зубик и сателлиты молекулы — чтобы «внуки» с подписями их не задевали
     others.forEach(function (h, i) {
       var a = mobile ? -Math.PI / 2 + i * 2 * Math.PI / 3 : toC + Math.PI / 3 + i * 2 * Math.PI / 3;
       set(h, mx + Math.cos(a) * sd, my + Math.sin(a) * sd, sr, 1, 'mini');
+      molParts.push([mx + Math.cos(a) * sd, my + Math.sin(a) * sd, sr]);
       LEAVES.forEach(function (l) {
         if (topHub(l) === h) set(l.id, mx + Math.cos(a) * sd, my + Math.sin(a) * sd, 0, 0, 'dot');
       });
@@ -460,23 +462,46 @@
         var d = leafR + sr + (mobile ? 30 : 40);
         var sx = x + ux * d, sy = y + uy * d;
         var lim = mobile ? sr + 46 : sr + 70;
+        // если подпись окажется сверху — ей тоже нужно место под краем экрана
+        var labH = (s.label || '').split('\n').length * 16;
+        function topMin(ty) { return sr + 24 + (ty < y - leafR * 0.4 ? labH : 0); }
+        var labW = Math.max.apply(null, (s.label || '').split('\n').map(function (t) { return t.length; })) * charW;
+        // кружок с подписью не задевает соседние сателлиты (с их подписями), молекулу, центральный круг и своего «родителя»
+        function free(tx, ty, bare) {
+          var side = subLab(tx, ty), b;
+          if (bare) b = { l: tx - sr, r: tx + sr, t: ty - sr, b: ty + sr };
+          else if (side === 't') b = { l: tx - labW / 2, r: tx + labW / 2, t: ty - sr - labH, b: ty + sr };
+          else if (side === 'b') b = { l: tx - labW / 2, r: tx + labW / 2, t: ty - sr, b: ty + sr + labH };
+          else b = { l: side === 'l' ? tx - sr - labW - 6 : tx - sr, r: side === 'l' ? tx + sr : tx + sr + labW + 6,
+                     t: ty - Math.max(sr, labH / 2), b: ty + Math.max(sr, labH / 2) };
+          function hit(A) { return Math.min(A.r, b.r) - Math.max(A.l, b.l) + 6 > 0 && Math.min(A.b, b.b) - Math.max(A.t, b.t) + 6 > 0; }
+          if (b.l < 4 || b.r > W - 4) return false;
+          if (P.some(function (o) { return o !== p && hit(box(o)); })) return false;
+          // подпись «на главную» над зубиком (место с запасом)
+          if (hit({ l: mx - 60, r: mx + 60, t: my - molParts[0][2] - 26, b: my })) return false;
+          if (molParts.some(function (m) { return distToBox(b, m[0], m[1]).d < m[2] + 8; })) return false;
+          return distToBox(b, cx2, cy2).d >= Rc + 8 && distToBox(b, x, y).d >= leafR + 4;
+        }
         // место по циферблату вокруг «родителя»: s.at = [[9, 11], [1, 3]] — берём первое время из диапазонов,
         // где кружок не вылезает за экран и не налезает на центральный круг (12 — сверху, 3 — справа)
         if (s.at) {
-          var found = false;
-          s.at.forEach(function (rg) {
+          var found = false, bare = false;
+          // если в заданных часах места нет — обходим весь циферблат; совсем тесно (телефон боком) —
+          // ставим кружок без подписи (название всё равно видно в окне по нажатию)
+          [false, true].forEach(function (nolab) { if (!found) s.at.concat([[0, 11.75]]).forEach(function (rg) {
             for (var hr = rg[0]; !found && hr <= rg[1] + 0.001; hr += 0.25) {
               var ang = (hr / 12) * 2 * Math.PI - Math.PI / 2;
               var tx = x + Math.cos(ang) * d, ty = y + Math.sin(ang) * d;
-              if (tx < lim || tx > W - lim || ty < sr + 24) continue;
+              if (tx < lim || tx > W - lim || ty < (nolab ? sr + 24 : topMin(ty))) continue;
               if (Math.hypot(tx - cx2, ty - cy2) < Rc + sr + 30) continue;
               // не на луч «родитель — центр»
               var da = Math.abs(Math.atan2(ty - y, tx - x) - Math.atan2(cy2 - y, cx2 - x));
               if (Math.min(da, 2 * Math.PI - da) < 0.6) continue;
-              sx = tx; sy = ty; found = true;
+              if (!free(tx, ty, nolab)) continue;
+              sx = tx; sy = ty; found = true; bare = nolab;
             }
-          });
-          if (found) { set(s.id, sx, sy, sr, 1, 'ring', subLab(sx, sy)); return; }
+          }); });
+          if (found) { set(s.id, sx, sy, sr, 1, 'ring', bare ? '' : subLab(sx, sy)); return; }
         }
         if (sx < lim || sx > W - lim) {   // упёрлись в край экрана — ставим над «родителем»
           sx = Math.max(lim, Math.min(W - lim, x));
