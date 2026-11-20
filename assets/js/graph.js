@@ -85,6 +85,8 @@
     if (ef) LEAVES.push({ id: 'e' + e, parent: 'efiry', label: ef.title, img: ef.img, detail: 'd-e' + e });
     else LEAVES.push({ id: 'e' + e, parent: 'efiry', label: 'Эфир ' + e, inner: '▶', detail: 'd-efir', placeholder: true });
   }
+  // эфиры-продолжения — маленьким кружком рядом со своим эфиром
+  LEAVES.push({ id: 'e1s', parent: 'e1', sub: true, at: [[1, 3], [9, 11]], label: 'Хорошие люди\nс плохими зубами', img: 'efir-c65099.jpg', detail: 'd-e1s' });   // t.me/psy_teeth/65099, Гульназ Казакова
 
   // ---------- DOM ----------
   var stage = document.getElementById('stage');
